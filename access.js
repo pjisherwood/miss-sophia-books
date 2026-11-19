@@ -27,6 +27,6 @@
   window.msbAudioLinks = async slug => {
     const r = await fetch('/api/audio-links', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ tokens: get(TK, []), slug }) });
     if(!r.ok) return null;
-    const d = await r.json(); return Array.isArray(d.urls) ? d.urls : null;
+    const d = await r.json(); window.msbProbe = d.probe; return Array.isArray(d.urls) ? d.urls : null;
   };
 })();

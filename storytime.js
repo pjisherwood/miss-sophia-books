@@ -5,6 +5,20 @@ const ITEMS = STORYTIME.concat(WISDOM.filter(w => w.audio).map(w => ({ slug:w.sl
 /* audiobooks (chapter mode). They are paid: a book only opens for someone who owns it (see access.js); everyone else is sent to its product page. */
 const BOOKITEMS = AUDIOBOOKS.map(b => ({ slug:b.slug, title:b.title, summary:bookChapterCount(b) + ' chapters', chapter:'Audiobook · by ' + b.by, cover:b.cover, thumb:b.cover, chapters:b.chapters, duration:bookSeconds(b), theme:b.theme, credit:(b.narration || '') + (b.narration && b.narrationNote ? ' (' + b.narrationNote + ')' : ''), by:b.by, access:b.access, productId:b.productId }));
 const ALL = ITEMS.concat(BOOKITEMS);
+  /* Colour looks for Story time. Try one on your phone by adding ?look=midnight (or ocean, ink) to the address; ?look=0 goes back.
+     (A look replaces the cover-based brown/red background. Once one is chosen it becomes the standard.) */
+  const LOOKS = {
+    midnight:{ bg1:'#14264f', bg2:'#0a1330', accent:'#7fd6d3', on:'#052b2e', text:'#eef4fb', soft:'#9fb4d3' },
+    ocean:{ bg1:'#0f4350', bg2:'#08242d', accent:'#ffc2a0', on:'#2a1306', text:'#f0f8f8', soft:'#9fc7cc' },
+    ink:{ bg1:'#1b2230', bg2:'#0d1017', accent:'#8ecbff', on:'#04223d', text:'#f3f6fa', soft:'#9ba6ba' }
+  };
+  let look = null;
+  try{ const m = location.search.match(/[?&]look=([a-z0-9]+)/); if(m){ if(LOOKS[m[1]]) localStorage.setItem('msb-look', m[1]); else localStorage.removeItem('msb-look'); }
+       look = LOOKS[localStorage.getItem('msb-look')] || null; }catch(e){}
+  function applyLook(){ if(!look) return; const r = document.documentElement.style;
+    r.setProperty('--bg1', look.bg1); r.setProperty('--bg2', look.bg2); r.setProperty('--accent', look.accent); r.setProperty('--on-accent', look.on);
+    r.setProperty('--text', look.text); r.setProperty('--soft', look.soft); const tc = document.getElementById('themeColor'); if(tc) tc.content = look.bg2; }
+
 (function(){
   const small = () => window.matchMedia('(max-width:800px)').matches;
   const icon = n => `<svg class="ic"><use href="#i-${n}"/></svg>`;
@@ -92,6 +106,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     return parse(PASTELS[best]);
   }
   function themeFromStory(s){
+    if(look){ applyLook(); return; }
     const t = Object.assign({bg:'#14110e', accent:'peach'}, s.theme || {}); applyTheme(parse(t.bg), resolveAccent(t.accent));
     if(!s.cover) return;
     const img = new Image(); img.onload = () => { try{
@@ -127,7 +142,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     box.scrollTop = 0;
   }
   function setBookMode(on){
-    $('#player').classList.toggle('bookmode', on); $('#words').hidden = on; $('#chapters').hidden = !on; $('#listBtn').hidden = on;
+    $('#player').classList.toggle('bookmode', on); $('#words').hidden = on; $('#chapters').hidden = !on; $('#listBtn').style.visibility = on ? 'hidden' : '';
   }
   function markRows(){
     if(!isBook()) return; const st = bookState(story);
@@ -139,7 +154,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
   function bookNote(t){
     if(!isBook()) return; const st = bookState(story);
     let l = 0; story.chapters.forEach((c,i) => { l += i === ch ? (st.rows[i].d ? c.duration : Math.min(t||0, c.duration)) : (st.rows[i].d ? c.duration : st.rows[i].p); });
-    $('#stNote').textContent = (story.chapters[ch].n ? 'Chapter ' + story.chapters[ch].n + ' of ' + bookChapterCount(story) : story.chapters[ch].title) + ' · ' + Math.floor(l/60) + ' of ' + mm(story.duration) + ' min' + (story.credit ? '\n' + story.credit : '');
+    $('#stNote').textContent = (story.chapters[ch].n ? 'Chapter ' + story.chapters[ch].n + ' of ' + bookChapterCount(story) : story.chapters[ch].title) + ' · ' + Math.floor(l/60) + ' of ' + mm(story.duration) + ' min';
     markRows();
   }
   /* The chapter files are private. A Netlify Function checks this phone's tokens with Stripe and returns short-lived links
@@ -162,7 +177,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(s0 > 5 && s0 < c.duration - 10){ seekTo(s0); } 
     bookNote(Math.max(0, s0 || 0)); setMediaSession();
     const row = document.querySelector('#chapters .chap:nth-child(' + (i+1) + ')'); if(row && row.scrollIntoView) row.scrollIntoView({ block:'nearest' });
-    if(play){ const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.'; }); }
+    if(play){ const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.' + probeText(); }); }
   }
   function stepChapter(d){
     if(!isBook()) return; const n = story.chapters.length;
@@ -194,8 +209,8 @@ const ALL = ITEMS.concat(BOOKITEMS);
   function showBrowse(){
     audio.pause(); story = null; loadToken++; setBookMode(false); renderYours(); cardStatus();
     $('#player').hidden = true; $('#browse').hidden = false; $('#sheet').hidden = true; $('#shareBtn').hidden = true;
-    const r = document.documentElement.style; ['--bg1','--bg2','--accent','--on-accent'].forEach(v => r.removeProperty(v));
-    $('#themeColor').content = '#14110e'; document.title = 'Story time – Miss Sophia Books';
+    const r = document.documentElement.style; ['--bg1','--bg2','--accent','--on-accent'].forEach(v => r.removeProperty(v)); applyLook();
+    $('#themeColor').content = look ? look.bg2 : '#14110e'; document.title = 'Story time – Miss Sophia Books';
   }
   function open(slug){
     story = ALL.find(s => s.slug === slug); if(!story) return showBrowse();
@@ -228,7 +243,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
 
   function toggle(){
     if(!story || !(story.audio || story.chapters)) return;
-    if(audio.paused){ audio.playbackRate = rate; const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.'; }); }
+    if(audio.paused){ audio.playbackRate = rate; const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.' + probeText(); }); }
     else { saveNow(); audio.pause(); }
   }
   function seekTo(sec){
@@ -256,6 +271,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     setPlayIcon(false); try{ localStorage.removeItem(key()); localStorage.setItem('stdone-' + story.slug, '1'); }catch(e){} audio.currentTime = 0; paint(0); });
   audio.addEventListener('timeupdate', () => paint(audio.currentTime));
   audio.addEventListener('loadedmetadata', () => { audio.playbackRate = rate; if(!story) return; $('#tAll').textContent = fmt(dur()); if(pendingSeek != null){ audio.currentTime = pendingSeek; pendingSeek = null; } });
+  const probeText = () => (window.msbProbe ? ' (storage: ' + window.msbProbe.status + (window.msbProbe.type ? ', ' + window.msbProbe.type : '') + ')' : ''); /* TEMPORARY while testing */
   let relinking = false;
   audio.addEventListener('error', async () => {
     if(!story || !audio.getAttribute('src')) return;
@@ -264,7 +280,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
       try{ if(await loadUrls(b) && story === b){ selectChapter(i, was); if(at > 3) seekTo(at); relinking = false; return; } }catch(e){}
       relinking = false;
     }
-    $('#stNote').textContent = 'Sorry, the recording could not be loaded.';
+    $('#stNote').textContent = 'Sorry, the recording could not be loaded.' + probeText();
   });
 
   $('#playBtn').onclick = toggle; $('#words').onclick = toggle; $('#cover').onclick = toggle;
@@ -317,7 +333,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(want && ALL.some(s => s.slug === want)){ if(!story || story.slug !== want) open(want); }
     else if(story) showBrowse();
   }
-  setPlayIcon(false);
+  setPlayIcon(false); applyLook();
   /* if this phone has tokens, confirm them first so a deep link to a story it owns opens properly */
   (async () => { if(window.msbTokens && msbTokens().length){ await msbRefresh(); renderYours(); cardStatus(); } route(); })();
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
