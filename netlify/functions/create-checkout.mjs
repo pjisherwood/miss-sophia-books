@@ -46,9 +46,7 @@ export default async (req) => {
   } catch (e) {
     console.error('create-checkout:', e.message);
     if (e.code === 'nokey') return json({ error: 'Payments are not switched on yet.' }, 503);
-    // Temporary while we test: pass Stripe's own message back (any key-like text blanked out) so it can be read without the logs.
-    const detail = String(e.message || '').replace(/[spr]k_(test|live)_[A-Za-z0-9*._-]*/g, '[key]').slice(0, 300);
-    return json({ error: 'Sorry, we could not start the payment. Please try again.', detail }, 502);
+    return json({ error: 'Sorry, we could not start the payment. Please try again.' }, 502);
   }
 };
 

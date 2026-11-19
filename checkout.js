@@ -28,7 +28,7 @@
         body: JSON.stringify({ productId:item.productId, agreed:agree.checked, marketing:mkt.checked }) });
       const d = await r.json().catch(() => ({}));
       if(r.ok && d.url){ location.href = d.url; return; }
-      msg.textContent = (d.error || 'Sorry, something went wrong. Please try again.') + (d.detail ? ' [' + d.detail + ']' : '');
+      msg.textContent = (d.error || 'Sorry, something went wrong. Please try again.');
     }catch(e){ msg.textContent = 'Sorry, we could not connect. Please check your internet and try again.'; }
     pay.disabled = !agree.checked; pay.textContent = 'Continue to payment';
   };
