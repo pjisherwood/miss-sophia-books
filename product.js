@@ -14,7 +14,7 @@
   const book = BOOKS.find(b => b.slug === item.bookSlug) || null;
   const chapters = item.chapters || [];
   const totalSec = chapters.length ? bookSeconds(item) : item.duration;
-  const facts = [item.priceText, mins(totalSec) + ' min'].concat(chapters.length ? [chapters.length + ' chapters'] : []);
+  const facts = [item.priceText, hrmin(totalSec)].concat(chapters.length ? [bookChapterCount(item) + ' chapters'] : []);
   const owned = typeof isOwned === 'function' && isOwned(item.slug);
   document.title = item.title + ' – ' + item.kind.toLowerCase() + ' – Miss Sophia Books';
   const desc = book ? book.intro.concat(book.more) : [item.summary || ''];
@@ -29,8 +29,13 @@
       <div>
         <p class="kind">${esc(item.kind)}</p>
         <h1>${esc(item.title)}</h1>
-        ${item.by ? `<p class="by">By ${esc(item.by)}${item.narration ? ' · ' + esc(item.narration) : ''}</p>` : ''}
+        ${item.by ? `<p class="by">By ${esc(item.by)}${item.narration ? ' · ' + esc(item.narration) + (item.narrationNote ? ' <span class="ai">(' + esc(item.narrationNote) + ')</span>' : '') : ''}</p>` : ''}
         <p class="facts">${facts.map((f,i) => i === 0 ? `<b>${esc(f)}</b>` : esc(f)).join(' · ')}</p>
+        ${item.sample ? `<div class="sample" id="sample">
+          <button id="spBtn" aria-label="Play the free sample">${icoPlay}</button>
+          <div class="sb"><b>Listen to a free sample</b><small id="spTime">0:00 / ${fmt(item.sample.duration)}</small>
+            <input type="range" id="spSeek" min="0" max="1000" value="0" aria-label="Position in the sample"></div>
+        </div>` : ''}
         ${owned
           ? `<p class="owned soft">You have this one.</p><br><a class="btn buy-btn" href="storytime.html#${esc(item.slug)}">Listen now</a>`
           : `<button class="btn buy-btn" id="buyBtn">Buy for ${esc(item.priceText)}</button>
@@ -38,18 +43,8 @@
       </div>
     </div>
 
-    ${item.sample ? `<h2>Hear a little first</h2>
-    <div class="sample" id="sample">
-      <button id="spBtn" aria-label="Play the free sample">${icoPlay}</button>
-      <div class="sb"><b>Free sample</b><small id="spTime">0:00 / ${fmt(item.sample.duration)}</small>
-        <input type="range" id="spSeek" min="0" max="1000" value="0" aria-label="Position in the sample"></div>
-    </div>` : ''}
-
     <h2>About this ${esc(item.kind.toLowerCase())}</h2>
     ${desc.map(p => `<p>${esc(p)}</p>`).join('')}
-
-    ${chapters.length ? `<h2>The chapters</h2>
-    <ol class="chapters">${chapters.map((c,i) => `<li><span class="n">${i+1}</span><span class="t"><b>${esc(c.title)}</b><em>${esc(teaser(c.first))}</em></span><span class="len">${mins(c.duration)} min</span></li>`).join('')}</ol>` : ''}
 
     ${book && (book.url || book.audiobook) ? `<h2>Also available</h2>
     <div class="also buy">${book.url ? `<a class="btn ghost" href="${esc(book.url)}">The book on Amazon</a>` : ''}${book.audiobook ? `<a class="btn spotify" href="${esc(book.audiobook)}" target="_blank" rel="noopener">Audiobook on Spotify</a>` : ''}</div>` : ''}

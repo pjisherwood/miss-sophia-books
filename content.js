@@ -562,11 +562,12 @@ const STORYTIME = [ {
    - bookSlug: the BOOKS entry that supplies the description, the Amazon link (url) and the Spotify link (audiobook).
    - sample: the FREE sample. It is a normal public file in the audio folder.
    - chapters: one entry per chapter, in order.
-       title    = the chapter title            first = the first sentence of the chapter (the page adds "..." itself)
+       n        = the chapter number (null for Titles & Credits and the Preface, which are not numbered chapters)
+       title    = the chapter title            first = the first sentence of the chapter (the player adds "..." itself; "" for none)
        file     = the chapter's file name in PRIVATE storage (never in the public audio folder)
        duration = length in seconds
      The book's text is never shown: only the title and that first sentence.
-   - The placeholders below are to be replaced with the real titles, first sentences, files and lengths.
+   - Titles, first sentences and lengths below are the real ones (19 Nov 2026). The files are in private storage (stage 4).
    ===================================================================== */
 const AUDIOBOOKS = [ {
   slug:"a-christmas-dream",
@@ -575,26 +576,29 @@ const AUDIOBOOKS = [ {
   title:"A Christmas Dream",
   kind:"Audiobook",
   by:"Paul Isherwood",
-  narration:"",                      /* e.g. "Read by Miss Sophia (an AI voice)". Shown on the page and in the player when filled in. */
+  narration:"Read by Miss Sophia", narrationNote:"AI voice",   /* shown as: Read by Miss Sophia (AI voice). narrationNote is the quiet bracket; set it to "" to remove it. */
   cover:"covers/a-christmas-dream-2.jpg",
   theme:{bg:"#3a0d14",accent:"peach"},
-  sample:{ audio:"audio/a-christmas-dream-sample.mp3", duration:180 },
+  sample:{ audio:"audio/a-christmas-dream-sample.mp3", duration:417 },
   chapters:[
-    { title:"Placeholder title for chapter 1",  first:"The first sentence of chapter 1 will go here.",  file:"chapter-01.mp3", duration:262 },
-    { title:"Placeholder title for chapter 2",  first:"The first sentence of chapter 2 will go here.",  file:"chapter-02.mp3", duration:281 },
-    { title:"Placeholder title for chapter 3",  first:"The first sentence of chapter 3 will go here.",  file:"chapter-03.mp3", duration:244 },
-    { title:"Placeholder title for chapter 4",  first:"The first sentence of chapter 4 will go here.",  file:"chapter-04.mp3", duration:298 },
-    { title:"Placeholder title for chapter 5",  first:"The first sentence of chapter 5 will go here.",  file:"chapter-05.mp3", duration:276 },
-    { title:"Placeholder title for chapter 6",  first:"The first sentence of chapter 6 will go here.",  file:"chapter-06.mp3", duration:255 },
-    { title:"Placeholder title for chapter 7",  first:"The first sentence of chapter 7 will go here.",  file:"chapter-07.mp3", duration:301 },
-    { title:"Placeholder title for chapter 8",  first:"The first sentence of chapter 8 will go here.",  file:"chapter-08.mp3", duration:269 },
-    { title:"Placeholder title for chapter 9",  first:"The first sentence of chapter 9 will go here.",  file:"chapter-09.mp3", duration:288 },
-    { title:"Placeholder title for chapter 10", first:"The first sentence of chapter 10 will go here.", file:"chapter-10.mp3", duration:247 },
-    { title:"Placeholder title for chapter 11", first:"The first sentence of chapter 11 will go here.", file:"chapter-11.mp3", duration:283 },
-    { title:"Placeholder title for chapter 12", first:"The first sentence of chapter 12 will go here.", file:"chapter-12.mp3", duration:296 }
+    { n:null, title:"Titles & Credits", first:"", file:"track-01.mp3", duration:7 },
+    { n:null, title:"Preface", first:"", file:"track-02.mp3", duration:40 },
+    { n:1, title:"A Box of Memories", first:"Oliver had always loved Christmas.", file:"track-03.mp3", duration:695 },
+    { n:2, title:"A Familiar Glow", first:"That night, the house was unusually quiet.", file:"track-04.mp3", duration:287 },
+    { n:3, title:"Christmas Past", first:"The swirling light around them grew brighter, softening into a golden glow that felt both familiar and comforting.", file:"track-05.mp3", duration:472 },
+    { n:4, title:"Christmas Present", first:"The shimmering light faded, leaving Oliver standing in his own living room.", file:"track-06.mp3", duration:738 },
+    { n:5, title:"Christmas Yet to Come", first:"The golden light around Oliver softened, turning into a radiant, silvery glow that filled the space with a quiet stillness.", file:"track-07.mp3", duration:496 },
+    { n:6, title:"Waking Up to Joy", first:"The house was quiet, cloaked in the lingering darkness of a winter morning.", file:"track-08.mp3", duration:400 },
+    { n:7, title:"Miss Sophia’s Bookshop", first:"After lunch, the three of them bundled up in scarves and coats and set off for the village.", file:"track-09.mp3", duration:367 },
+    { n:8, title:"’Twas the Night Before Christmas", first:"The walk home from the village was magical.", file:"track-10.mp3", duration:319 },
+    { n:9, title:"A Christmas Miracle", first:"The next morning, Oliver awoke feeling wonderful.", file:"track-11.mp3", duration:274 },
+    { n:10, title:"A Sign of Love", first:"The sound of the doorbell rang out just as Oliver reached for the peeler.", file:"track-12.mp3", duration:467 },
+    { n:11, title:"The Greatest Gift", first:"After the robin’s visit, the garden beyond the frosted glass seemed even more still and quiet, the snow glistening faintly under the soft glow spilling from the living room.", file:"track-13.mp3", duration:540 }
   ]
 } ];
 /* helpers used by the product page and the player */
 const bookSeconds = b => b.chapters.reduce((a,c) => a + c.duration, 0);
 const bookMinutes = b => Math.max(1, Math.round(bookSeconds(b) / 60));
+const bookChapterCount = b => b.chapters.filter(c => c.n).length;
+const hrmin = sec => { const m = Math.max(1, Math.round(sec / 60)); return m >= 60 ? Math.floor(m / 60) + ' hr' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 const teaser = t => String(t).replace(/[.…\s]+$/, '') + '...';

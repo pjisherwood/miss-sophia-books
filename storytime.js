@@ -3,7 +3,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ITEMS = STORYTIME.concat(WISDOM.filter(w => w.audio).map(w => ({ slug:w.slug, title:w.title, summary:w.summary, chapter:w.kind, cover:w.playerImage || w.image || w.cover, thumb:w.thumb, audio:w.audio, duration:w.duration, marks:w.marks, body:w.body, theme:w.theme, credit:'' })));
 /* audiobooks (chapter mode). They are paid: a book only opens for someone who owns it (see access.js); everyone else is sent to its product page. */
-const BOOKITEMS = AUDIOBOOKS.map(b => ({ slug:b.slug, title:b.title, summary:b.chapters.length + ' chapters', chapter:'Audiobook · by ' + b.by, cover:b.cover, thumb:b.cover, chapters:b.chapters, duration:bookSeconds(b), theme:b.theme, credit:b.narration || '', by:b.by, access:b.access, productId:b.productId }));
+const BOOKITEMS = AUDIOBOOKS.map(b => ({ slug:b.slug, title:b.title, summary:bookChapterCount(b) + ' chapters', chapter:'Audiobook · by ' + b.by, cover:b.cover, thumb:b.cover, chapters:b.chapters, duration:bookSeconds(b), theme:b.theme, credit:(b.narration || '') + (b.narration && b.narrationNote ? ' (' + b.narrationNote + ')' : ''), by:b.by, access:b.access, productId:b.productId }));
 const ALL = ITEMS.concat(BOOKITEMS);
 (function(){
   const small = () => window.matchMedia('(max-width:800px)').matches;
@@ -63,7 +63,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     const st = bookState(b); if(st.doneN === b.chapters.length) return '✓ Listened';
     if(!st.listened && !st.doneN) return '';
     const i = resumeIndex(b, st), left = b.chapters[i].duration - st.rows[i].p;
-    return 'Continue: Chapter ' + (i+1) + ', ' + mm(left) + ' min left · ' + Math.round(st.listened / b.duration * 100) + '% listened';
+    return 'Continue: ' + (b.chapters[i].n ? 'Chapter ' + b.chapters[i].n : b.chapters[i].title) + ', ' + mm(left) + ' min left · ' + Math.round(st.listened / b.duration * 100) + '% listened';
   }
 
   /* colours taken from the cover picture (falls back to the colours stored with the story) */
@@ -133,13 +133,13 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(!isBook()) return; const st = bookState(story);
     document.querySelectorAll('#chapters .chap').forEach((r,i) => { const c = story.chapters[i], row = st.rows[i];
       r.classList.toggle('done', row.d); r.classList.toggle('now', i === ch);
-      r.querySelector('.cn').textContent = row.d ? '✓' : (i+1);
+      r.querySelector('.cn').textContent = row.d ? '✓' : (c.n || '');
       r.querySelector('.cl').textContent = row.d ? '' : (row.p ? mm(c.duration - row.p) + ' min left' : mm(c.duration) + ' min'); });
   }
   function bookNote(t){
     if(!isBook()) return; const st = bookState(story);
     let l = 0; story.chapters.forEach((c,i) => { l += i === ch ? (st.rows[i].d ? c.duration : Math.min(t||0, c.duration)) : (st.rows[i].d ? c.duration : st.rows[i].p); });
-    $('#stNote').textContent = 'Chapter ' + (ch+1) + ' of ' + story.chapters.length + ' · ' + Math.floor(l/60) + ' of ' + mm(story.duration) + ' min' + (story.credit ? '\n' + story.credit : '');
+    $('#stNote').textContent = (story.chapters[ch].n ? 'Chapter ' + story.chapters[ch].n + ' of ' + bookChapterCount(story) : story.chapters[ch].title) + ' · ' + Math.floor(l/60) + ' of ' + mm(story.duration) + ' min' + (story.credit ? '\n' + story.credit : '');
     markRows();
   }
   /* The chapter files are private. In stage 2 these are placeholder tones; stage 4 asks a Netlify Function for short-lived links
@@ -153,7 +153,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     audio.src = urls[i]; audio.preload = 'none'; audio.playbackRate = rate;
     try{ localStorage.setItem('stlast-' + story.slug, i); }catch(e){}
     $('#pcount').textContent = (i+1) + ' / ' + story.chapters.length;
-    $('#stSub').textContent = 'Chapter ' + (i+1) + ': ' + c.title;
+    $('#stSub').textContent = c.n ? 'Chapter ' + c.n + ': ' + c.title : c.title;
     $('#tNow').textContent = '0:00'; $('#tAll').textContent = fmt(c.duration); $('#seek').value = 0; setPlayIcon(false);
     const s0 = parseFloat(lsv('stpos-' + story.slug + '-c' + (i+1)));
     if(s0 > 5 && s0 < c.duration - 10){ seekTo(s0); } 
@@ -174,7 +174,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     themeFromStory(b);
     $('#stTitle').textContent = b.title; $('#stSub').classList.remove('big');
     document.title = b.title + ' – Story time';
-    $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${i+1}</span><span class="ct"><b>${esc(c.title)}</b><em>${esc(teaser(c.first))}</em></span><span class="cl"></span></button>`).join('');
+    $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${c.n || ''}</span><span class="ct"><b>${esc(c.title)}</b>${c.first ? `<em>${esc(teaser(c.first))}</em>` : ''}</span><span class="cl"></span></button>`).join('');
     $('#playBtn').disabled = false; $('#seek').disabled = false;
     if(location.hash.slice(1) !== b.slug) history.pushState(null, '', '#' + b.slug);
     const tok = ++loadToken; await loadUrls(b); if(tok !== loadToken || story !== b) return;
@@ -290,7 +290,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(!('mediaSession' in navigator) || !story) return;
     const art = story.cover ? [{src: story.cover, }] : [];
     if(isBook()){ const c = story.chapters[ch];   /* lock screen: the book title and the current chapter */
-      navigator.mediaSession.metadata = new MediaMetadata({ title: 'Chapter ' + (ch+1) + ': ' + c.title, artist: story.title, album: 'by ' + story.by, artwork: art });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: c.n ? 'Chapter ' + c.n + ': ' + c.title : c.title, artist: story.title, album: 'by ' + story.by, artwork: art });
       navigator.mediaSession.setActionHandler('previoustrack', () => stepChapter(-1)); navigator.mediaSession.setActionHandler('nexttrack', () => stepChapter(1)); }
     else { navigator.mediaSession.metadata = new MediaMetadata({ title: story.title, artist: 'Miss Sophia', album: story.credit || 'Story time', artwork: art });
       try{ navigator.mediaSession.setActionHandler('previoustrack', null); navigator.mediaSession.setActionHandler('nexttrack', null); }catch(e){} }

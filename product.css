@@ -34,3 +34,6 @@
   .prod .pcover{flex-basis:auto;width:min(58%,220px)}
   .prod h1{font-size:1.8rem}
 }
+
+.prod .by .ai{font-size:.82em;opacity:.8;white-space:nowrap}
+.prod .top .sample{margin:2px 0 16px}
