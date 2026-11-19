@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110e" id="themeColor">
+<title>Listen: The Magic in Everything – Miss Sophia Books</title>
+<meta name="description" content="Listen to this story read by Miss Sophia (5 min). Three friends in Miss Sophia’s bookshop wonder whether magic is real, until a snowy evening shows them.">
+<link rel="canonical" href="https://misssophiabooks.com/listen/the-magic-in-everything">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Miss Sophia Books">
+<meta property="og:title" content="Listen: The Magic in Everything – Miss Sophia Books">
+<meta property="og:description" content="Listen to this story read by Miss Sophia (5 min). Three friends in Miss Sophia’s bookshop wonder whether magic is real, until a snowy evening shows them.">
+<meta property="og:url" content="https://misssophiabooks.com/listen/the-magic-in-everything">
+<meta property="og:image" content="https://misssophiabooks.com/share/the-magic-in-everything.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Magic in Everything">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Listen: The Magic in Everything – Miss Sophia Books">
+<meta name="twitter:description" content="Listen to this story read by Miss Sophia (5 min). Three friends in Miss Sophia’s bookshop wonder whether magic is real, until a snowy evening shows them.">
+<meta name="twitter:image" content="https://misssophiabooks.com/share/the-magic-in-everything.jpg">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="storytime.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4.2" height="15" rx="1.2"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2"/></symbol>
+  <symbol id="i-back" viewBox="0 0 32 32"><path d="M16 6a10 10 0 1 1-9.5 6.9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M6 4.5v6.6h6.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="16" y="21" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" font-family="Arial,sans-serif">15</text></symbol>
+  <symbol id="i-fwd" viewBox="0 0 32 32"><path d="M16 6a10 10 0 1 0 9.5 6.9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M26 4.5v6.6h-6.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="16" y="21" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" font-family="Arial,sans-serif">15</text></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6h14M5 11h14M5 16h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4l4 4M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<div class="app" id="app">
+  <header class="bar">
+    <a class="brand" id="brand" href="index.html">Miss Sophia Books</a>
+    <button class="icon" id="shareBtn" aria-label="Share this story" hidden><svg class="ic"><use href="#i-share"/></svg></button>
+    <button class="icon" id="menuBtn" aria-label="Menu" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
+  </header>
+  <nav class="menu" id="menu" hidden></nav>
+
+  <!-- Screen 1: choose a story -->
+  <main class="browse" id="browse">
+    <div class="pic" id="pic" role="img"></div>
+    <div class="browse-in">
+      <h1>Story time</h1>
+      <p>Settle into a comfy chair, and let Miss Sophia read to you.</p>
+      <div class="st-list" id="storyList"></div>
+      <div class="more" id="more"></div>
+    </div>
+  </main>
+
+  <!-- Screen 2: the player -->
+  <section class="player" id="player" hidden>
+    <button class="backlink" id="backBtn"><svg class="ic"><use href="#i-chev"/></svg> Stories</button>
+    <div class="cover-wrap"><img class="cover" id="cover" alt=""></div>
+    <div class="panel">
+      <div class="meta"><div class="mt"><b id="stTitle"></b><span id="stSub"></span></div>
+        <div class="pnav"><button class="pn" id="prevP" aria-label="Previous paragraph"><svg class="ic"><use href="#i-chev"/></svg></button><span id="pcount">1 / 1</span><button class="pn" id="nextP" aria-label="Next paragraph"><svg class="ic" style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button></div></div>
+      <div class="words" id="words" tabindex="0"><p id="para"></p></div>
+      <div class="seekrow">
+        <span id="tNow">0:00</span>
+        <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Position in the story">
+        <span id="tAll">0:00</span>
+      </div>
+      <div class="ctl">
+        <button class="icon txt" id="speed" aria-label="Reading speed">1×</button>
+        <button class="icon" id="back" aria-label="Back 15 seconds"><svg class="ic big"><use href="#i-back"/></svg></button>
+        <button class="play" id="playBtn" aria-label="Play"><svg class="ic"><use href="#i-play"/></svg></button>
+        <button class="icon" id="fwd" aria-label="Forward 15 seconds"><svg class="ic big"><use href="#i-fwd"/></svg></button>
+        <button class="icon txt" id="listBtn" aria-label="Show the full text"><svg class="ic"><use href="#i-text"/></svg></button>
+      </div>
+      <p class="note" id="stNote"></p>
+    </div>
+  </section>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-in">
+      <div class="sheet-top"><b id="sheetTitle">Full text</b><button class="icon" id="closeSheet" aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <article class="full" id="full"></article>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script src="content.js"></script>
+<script src="chunks.js"></script>
+<script src="storytime.js"></script>
+</body>
+</html>

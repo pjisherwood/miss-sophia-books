@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>if(location.pathname.indexOf('/wisdom/')===0)document.write('<base href="/">');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Voice test – Miss Sophia Books</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  #testlog{background:#f6f3e8;border:1px solid var(--teal-line);border-radius:8px;padding:12px 14px;font:.82rem/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;color:#333;min-height:3em}
+  .warn{background:#fff4e5;border:1px solid #f0c27b;border-radius:8px;padding:10px 14px;display:none}
+</style>
+<!-- This page adds its own (voice) chat widget below, so site.js must not add the standard text-only one. -->
+<script>window.CHAT_CUSTOM = true;</script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap" style="padding-top:30px">
+  <h1 class="title">Voice test</h1>
+  <p>This is a private test page for talking with Miss Sophia by voice as well as by text. It is not in the menu. The rest of the site keeps the text-only chat.</p>
+  <p>Tap the chat button at the bottom right, then choose Talk. Your device may ask permission to use the microphone.</p>
+  <div class="warn" id="originWarn"></div>
+
+  <h2 class="eyebrow" style="margin-top:34px">What the page is doing (for testing)</h2>
+  <div id="testlog" aria-live="polite">Waiting for the page to load…</div>
+</main>
+<div id="site-footer"></div>
+
+<!-- THE WIDGET: the separate voice agent "Miss Sophia voice" (chat mode switched off in ElevenLabs).
+     The rest of the site uses the text-only "Miss Sophia" agent (CHAT_AGENT_ID in content.js).
+     No text-only, variant or text attributes: the look and the Talk/chat buttons come from the voice agent's own widget settings. -->
+<elevenlabs-convai id="sophia" agent-id="agent_2601m6951g1bezerrypnh0hejm1m"></elevenlabs-convai>
+
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var widget = document.getElementById('sophia');
+  var logEl = document.getElementById('testlog');
+  var lines = [];
+  function log(msg){ lines.push(new Date().toLocaleTimeString()+'  '+msg); logEl.textContent = lines.join('\n'); try{console.log('[voice-test]',msg)}catch(e){} }
+
+  /* Allowed addresses (ElevenLabs allowlist). The chat will not start from other addresses (preview links, netlify.app, etc). */
+  var host = location.hostname.replace(/^www\./,'');
+  if (host !== 'misssophiabooks.com' && host !== 'paulisherwood.com') {
+    var w = document.getElementById('originWarn');
+    w.style.display = 'block';
+    w.textContent = 'You are viewing this page from ' + location.hostname + ', which is not on the agent’s allowlist (misssophiabooks.com, paulisherwood.com, with or without www). The chat probably will not start here. Try the live address.';
+  }
+  log('Page loaded from ' + location.origin);
+  log('Agent: ' + widget.getAttribute('agent-id'));
+
+  /* Just logging: no overrides are needed with the separate voice agent. */
+  widget.addEventListener('elevenlabs-convai:call', function(){ log('Conversation started (call event received).'); });
+  ['elevenlabs-convai:error'].forEach(function(n){
+    widget.addEventListener(n, function(e){ log('Widget event: ' + n + (e && e.detail ? ' ' + JSON.stringify(e.detail).slice(0,200) : '')); });
+  });
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      log(customElements.get('elevenlabs-convai') ? 'Widget script is loaded and ready.' : 'Widget script has NOT loaded (blocked or offline).');
+    }, 1500);
+  });
+})();
+</script>
+<!-- ElevenLabs widget script (same one site.js uses on the other pages) -->
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>

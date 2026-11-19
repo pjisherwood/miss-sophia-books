@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miss Sophia’s Books, Stories & Wisdom</title>
+<meta name="description" content="A quiet bookshop for heartfelt stories, gentle wisdom and a little light in a noisy world.">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="shop" id="shop">
+  <h1>Welcome to Miss Sophia’s bookshop</h1>
+  <p>A quiet place for heartfelt stories, gentle wisdom, and a little light in a noisy world.</p>
+</section>
+
+<main class="wrap">
+
+  <section class="block">
+    <h2 class="eyebrow">A thought for today</h2>
+    <div class="thought" id="thought"></div>
+    <a class="more" id="thoughtMore" href="wisdom.html">Read the piece →</a>  ·  <a class="more" href="wisdom.html">More wisdom</a>
+  </section>
+
+  <section class="block">
+    <h2 class="eyebrow">New on the shelf</h2>
+    <a class="shelf-item" id="newItem"></a>
+  </section>
+
+  <section class="block">
+    <h2 class="eyebrow">The books</h2>
+    <div class="books" id="books"></div>
+    <a class="more" href="books.html">About the books →</a>
+  </section>
+
+  <section class="block">
+    <aside class="pi-banner" aria-label="Meet Paul Isherwood">
+      <div class="pi-photo">
+        <picture>
+          <source srcset="paul-banner.webp" type="image/webp">
+          <img src="paul-banner.jpg" alt="Paul Isherwood, smiling, out on a woodland walk" width="120" height="120" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <div class="pi-text">
+        <p class="pi-kicker">The author behind these books</p>
+        <h2>Come and meet my friend Paul</h2>
+        <p class="pi-body">Paul wrote the stories and wisdom you'll find on my shelves. On his own website you can get to know him, follow his walks and reflections on TikTok and YouTube, and collect a free gift: a gentle meditation timer and appreciation app.</p>
+      </div>
+      <a class="pi-btn" href="https://paulisherwood.com" target="_blank" rel="noopener">Visit paulisherwood.com →</a>
+    </aside>
+  </section>
+
+</main>
+<div id="site-footer"></div>
+
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script>
+  // thought of the day: changes each day
+  const day = Math.floor(Date.now()/86400000);
+  const t = THOUGHTS[day % THOUGHTS.length];
+  $('#thought').textContent = '“' + t.text + '”';
+  $('#thoughtMore').href = pieceHref(t.from);
+
+  const n = $('#newItem');
+  n.href = NEW_ON_SHELF.url;
+  n.innerHTML = `<span class="ic">${NEW_ON_SHELF.icon}</span><span><b>${esc(NEW_ON_SHELF.title)}</b>${esc(NEW_ON_SHELF.text)}</span>`;
+
+  const ALL_BOOKS = BOOKS.concat(EARLIER_BOOKS.map(b => Object.assign({ earlier:true }, b)));
+  $('#books').innerHTML = ALL_BOOKS.map(b =>
+    `<a class="book" href="books.html#${b.slug}"><div class="cover" style="background-image:url('${b.image}')"></div>${esc(b.title)}${b.earlier?`<small class="era">An earlier book<br>${esc(b.tagline)}</small>`:''}</a>`).join('');
+
+</script>
+</body>
+</html>

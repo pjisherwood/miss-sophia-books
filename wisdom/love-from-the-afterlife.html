@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Love from the Afterlife – Miss Sophia Books</title>
+<meta name="description" content="Our loved ones are never truly gone. A comforting thought and a small, true story.">
+<link rel="canonical" href="https://misssophiabooks.com/wisdom/love-from-the-afterlife">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Miss Sophia Books">
+<meta property="og:title" content="Love from the Afterlife – Miss Sophia Books">
+<meta property="og:description" content="Our loved ones are never truly gone. A comforting thought and a small, true story.">
+<meta property="og:url" content="https://misssophiabooks.com/wisdom/love-from-the-afterlife">
+<meta property="og:image" content="https://misssophiabooks.com/share/love-from-the-afterlife.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Love from the Afterlife">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Love from the Afterlife – Miss Sophia Books">
+<meta name="twitter:description" content="Our loved ones are never truly gone. A comforting thought and a small, true story.">
+<meta name="twitter:image" content="https://misssophiabooks.com/share/love-from-the-afterlife.jpg">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap" style="padding-top:30px"><div id="view"></div></main>
+<div id="site-footer"></div>
+
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script>
+  const view = $('#view');
+  const picBg = w => w.image ? `url('${w.image}')` : themeBg(themeById(w.look));
+  const KINDS = ['All', ...(WISDOM.some(w => w.audio) ? ['Listen'] : []), ...new Set(WISDOM.map(w => w.kind))];
+  let kind = 'All';
+
+  function currentSlug(){
+    const m = location.pathname.match(/^\/wisdom\/([^\/]+)/);
+    return m ? decodeURIComponent(m[1]).replace(/\.html$/,'') : location.hash.replace('#','');
+  }
+
+  const mins = s => Math.max(1, Math.round(s/60));
+  const ls = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  function listenInfo(w){
+    if(!w.audio) return null;
+    const pos = parseFloat(ls('stpos-'+w.slug)), done = ls('stdone-'+w.slug);
+    if(pos > 5 && pos < w.duration - 10) return { cls:'part', label:'Continue · ' + mins(w.duration - pos) + ' min left', pct: Math.round(pos / w.duration * 100) };
+    if(done) return { cls:'done', label:'✓ Listened · ' + mins(w.duration) + ' min', pct: 100 };
+    return { cls:'', label:'Listen · ' + mins(w.duration) + ' min', pct: 0 };
+  }
+  const PLAY = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:currentColor;flex:0 0 auto"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></svg>';
+  const listenLink = w => { const l = listenInfo(w); return l ? `<a class="lis ${l.cls}" href="storytime.html#${w.slug}">${l.cls==='done'?'':PLAY}${esc(l.label)}${l.cls==='part'?`<i style="width:${l.pct}%"></i>`:''}</a>` : ''; };
+  const pill = w => { const l = listenInfo(w); return l ? `<span class="lis ${l.cls}">${l.cls==='done'?'':PLAY}${esc(l.label)}${l.cls==='part'?`<i style="width:${l.pct}%"></i>`:''}</span>` : ''; };
+
+  function renderList(){
+    const items = WISDOM.filter(w => kind==='All' || (kind==='Listen' ? !!w.audio : w.kind===kind));
+    document.title = 'Stories & Wisdom – Miss Sophia Books';
+    view.innerHTML = `<h1 class="title">Stories &amp; Wisdom</h1>
+      <p class="soft">Short pieces to read slowly, one at a time.</p>
+      <div class="chips">${KINDS.map(k=>`<button class="chip" data-k="${esc(k)}" aria-pressed="${k===kind}">${esc(k)}</button>`).join('')}</div>
+      ${items.map(w => `<div class="piece">
+        <a class="piece-link" href="${pieceHref(w.slug)}">
+          <div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'}"></div>
+          <h2 class="eyebrow">${esc(w.kind)}</h2><h3>${esc(w.title)}</h3>
+          ${w.date?`<div class="date">${esc(w.date)}</div>`:''}<p>${esc(w.summary)}</p></a>
+        <div class="piece-actions">${listenLink(w)}<a class="more" href="${pieceHref(w.slug)}">Read more →</a></div></div>`).join('')}`;
+    view.querySelectorAll('.chip').forEach(c => c.onclick = () => { kind = c.dataset.k; renderList(); });
+  }
+
+  function related(w){
+    const picks=(w.related||[]).map(s=>WISDOM.find(x=>x.slug===s)).filter(Boolean);
+    const same=WISDOM.filter(x=>x.kind===w.kind&&x!==w&&!picks.includes(x));
+    const i=WISDOM.indexOf(w); same.sort((a,b)=>((WISDOM.indexOf(a)-i+99)%99)-((WISDOM.indexOf(b)-i+99)%99));
+    return picks.concat(same).slice(0,2);
+  }
+
+  function renderPiece(w){
+    document.title = w.title + ' – Miss Sophia Books';
+    view.innerHTML = `<article class="reading">
+      <a href="wisdom.html" onclick="history.replaceState(null,'',location.pathname);">← All stories &amp; wisdom</a>
+      <div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'};margin-top:14px"></div>
+      ${w.cover?`<img src="${w.cover}" alt="Cover of ${esc(w.title)}" style="width:150px;border-radius:3px 6px 6px 3px;box-shadow:4px 6px 12px rgba(0,0,0,.25);margin:0 0 14px">`:''}
+      <h2 class="eyebrow">${esc(w.kind)}</h2>
+      <h1 class="title">${esc(w.title)}</h1>
+      ${w.date?`<div class="soft">${esc(w.date)}</div>`:''}
+      ${w.audio?`<a class="listenbtn ${listenInfo(w).cls}" href="storytime.html#${w.slug}">${listenInfo(w).cls==='done'?'':PLAY}${esc(listenInfo(w).label)}</a><p class="soft" style="font-size:.9rem;margin:6px 0 14px">Read aloud by Miss Sophia (an AI voice). Opens the story player.</p>`:''}
+      ${w.body.map(p=>p.startsWith('## ')?`<h3 class="q">${esc(p.slice(3))}</h3>`:`<p>${esc(p)}</p>`).join('')}
+      <div class="actions">${w.download?`<a class="btn" href="${w.download}">${esc(w.downloadText||'Download')}</a>`:''}<button class="btn ghost" id="share" style="font:inherit;font-weight:600;cursor:pointer">Share this with someone</button><span class="toast" id="toast"></span></div>
+      <h2 class="eyebrow" style="margin-top:34px">You might also like</h2>
+      ${related(w).map(r=>`<a class="linkcard" href="${pieceHref(r.slug)}"><span class="ic">📖</span><span><b>${esc(r.title)}</b>${esc(r.summary)}</span></a>`).join('')}
+    </article>`;
+    $('#share').onclick = async () => {
+      const url = shareUrl(w.slug), t = $('#toast');
+      if(navigator.share){ try{ await navigator.share({ title: w.title + ' – Miss Sophia Books', text: w.summary, url }); return; }catch(e){ if(e && e.name === 'AbortError') return; } }
+      try { await navigator.clipboard.writeText(url); t.textContent = 'Link copied.'; }
+      catch(e){ t.textContent = url; }
+    };
+  }
+
+  function route(){
+    const slug = currentSlug();
+    const w = WISDOM.find(x => x.slug === slug);
+    w ? renderPiece(w) : renderList();
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+</script>
+</body>
+</html>

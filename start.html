@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start here – Miss Sophia Books</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap" style="padding-top:30px">
+  <h1 class="title">Welcome — come in and look around</h1>
+  <!-- SAMPLE wording: replace with your own -->
+  <p>Miss Sophia keeps a small bookshop where people come to slow down. She believes there is quiet beauty still in the world, and within each of us.</p>
+  <p>If you’re new here, these are good places to begin.</p>
+
+  <h2 class="eyebrow" style="margin-top:28px">Read one story</h2>
+  <a class="linkcard" id="story"></a>
+
+  <h2 class="eyebrow">Take one piece of wisdom</h2>
+  <a class="linkcard" id="wise"></a>
+
+  <h2 class="eyebrow">Ask a question</h2>
+  <p>Miss Sophia is happy to talk. <a href="ask.html">Ask her whatever is on your mind →</a></p>
+
+  <h2 class="eyebrow">Meet the author</h2>
+  <!-- SAMPLE wording: replace with your own -->
+  <p>These stories are written by Paul Isherwood, who shares the same wisdom in his own voice at <a href="https://paulisherwood.com">paulisherwood.com</a>.</p>
+
+</main>
+<div id="site-footer"></div>
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script>
+  const s = WISDOM.find(w => w.kind==='Stories') || WISDOM[0];
+  const w = WISDOM.find(w => w.kind==='Wisdom') || WISDOM[0];
+  const card = (el,p) => { el.href = pieceHref(p.slug); el.innerHTML = `<span class="ic">📖</span><span><b>${esc(p.title)}</b>${esc(p.summary)}</span>`; };
+  card($('#story'), s); card($('#wise'), w);
+</script>
+</body>
+</html>

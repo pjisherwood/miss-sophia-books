@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Books by Paul Isherwood – Miss Sophia Books</title>
+<meta name="description" content="Books by Paul Isherwood: The Wisdom of Aloharin, The Most Important Hour, A Christmas Dream and The Most Important Hour of Your Life. Read, or listen to the audiobooks.">
+<link rel="canonical" href="https://misssophiabooks.com/books.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Miss Sophia Books">
+<meta property="og:title" content="Books by Paul Isherwood – Miss Sophia Books">
+<meta property="og:description" content="Books by Paul Isherwood: The Wisdom of Aloharin, The Most Important Hour, A Christmas Dream and The Most Important Hour of Your Life. Read, or listen to the audiobooks.">
+<meta property="og:url" content="https://misssophiabooks.com/books.html">
+<meta property="og:image" content="https://misssophiabooks.com/share/books.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The four books by Paul Isherwood">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Books by Paul Isherwood – Miss Sophia Books">
+<meta name="twitter:description" content="Books by Paul Isherwood: The Wisdom of Aloharin, The Most Important Hour, A Christmas Dream and The Most Important Hour of Your Life. Read, or listen to the audiobooks.">
+<meta name="twitter:image" content="https://misssophiabooks.com/share/books.jpg">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap" style="padding-top:30px">
+  <h1 class="title">The Books</h1>
+  <p class="soft">By Paul Isherwood.</p>
+  <div id="list"></div>
+  <h2 class="eyebrow" style="margin-top:40px">Free stories</h2>
+  <div id="free"></div>
+</main>
+<div id="site-footer"></div>
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script>
+  const ALL_BOOKS = BOOKS.concat(EARLIER_BOOKS.map(x => Object.assign({ earlier:true, inside:[] }, x)));
+  $('#list').innerHTML = ALL_BOOKS.map(b => `<article class="book-row" id="${b.slug}">
+    <div class="cover" style="background-image:url('${b.image}');background-size:cover"></div>
+    <div>
+      ${b.earlier?'<p class="era-label">An earlier book</p>':''}
+      <h3>${esc(b.title)}</h3>
+      <p class="tag">${esc(b.tagline)}</p>
+      ${b.intro.map(p=>`<p>${esc(p)}</p>`).join('')}
+      <details><summary>Read more</summary>
+        ${b.more.map(p=>`<p>${esc(p)}</p>`).join('')}
+        ${b.inside.length?`<p class="inside-h">What’s inside</p><ul>${b.inside.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:''}
+        ${b.note?`<p class="soft">${esc(b.note)} <a href="#most-important-hour">See it above.</a></p>`:''}
+      </details>
+      <div class="buy"><a class="btn" href="${b.url}">Find it on Amazon</a>${b.audiobook?`<a class="btn spotify" href="${b.audiobook}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="3" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/></svg>Audiobook on Spotify</a>`:''}</div>
+    </div></article>`).join('');
+  $('#free').innerHTML = WISDOM.filter(w => w.cover).map(w => `<div class="book-row">
+    <div class="cover" style="background-image:url('${w.cover}');background-size:cover"></div>
+    <div><h3>${esc(w.title)}</h3><p style="margin:6px 0 10px">${esc(w.summary)}</p><a class="btn ghost" href="${pieceHref(w.slug)}">Read it here</a></div>
+  </div>`).join('');
+</script>
+</body>
+</html>
