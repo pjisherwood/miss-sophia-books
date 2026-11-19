@@ -1,3 +1,4 @@
 /wisdom/*  /wisdom.html  200
 /listen  /storytime.html  301
 /listen/the-doorway  /listen/the-wisdom-of-aloharin  301
+/audiobook/*  /product.html  200

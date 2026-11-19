@@ -45,6 +45,7 @@
     <div class="browse-in">
       <h1>Story time</h1>
       <p>Settle into a comfy chair, and let Miss Sophia read to you.</p>
+      <div class="yours" id="yours" hidden></div>
       <div class="st-list" id="storyList"></div>
       <div class="more" id="more"></div>
     </div>
@@ -58,6 +59,7 @@
       <div class="meta"><div class="mt"><b id="stTitle"></b><span id="stSub"></span></div>
         <div class="pnav"><button class="pn" id="prevP" aria-label="Previous paragraph"><svg class="ic"><use href="#i-chev"/></svg></button><span id="pcount">1 / 1</span><button class="pn" id="nextP" aria-label="Next paragraph"><svg class="ic" style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button></div></div>
       <div class="words" id="words" tabindex="0"><p id="para"></p></div>
+      <div class="chapters" id="chapters" hidden></div>
       <div class="seekrow">
         <span id="tNow">0:00</span>
         <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Position in the story">
@@ -84,6 +86,7 @@
 <div class="toast" id="toast" hidden></div>
 <script src="content.js"></script>
 <script src="chunks.js"></script>
+<script src="access.js"></script>
 <script src="storytime.js"></script>
 </body>
 </html>

@@ -1,0 +1,36 @@
+/* Product page for paid audio (A Christmas Dream first). Uses the site's light style. */
+.prod .top{display:flex;gap:22px;align-items:flex-start;margin:6px 0 10px}
+.prod .pcover{flex:0 0 170px;width:170px;aspect-ratio:2/3;border-radius:3px 8px 8px 3px;box-shadow:6px 9px 18px rgba(0,0,0,.3);background-size:cover;background-position:center}
+.prod .kind{font-family:'EB Garamond',serif;color:var(--mint);font-size:1.3rem;margin:0;line-height:1.1}
+.prod h1{font-family:'EB Garamond',serif;font-weight:400;color:var(--navy);font-size:2.1rem;line-height:1.2;margin:2px 0 4px}
+.prod .by{margin:0 0 10px;color:var(--soft)}
+.prod .facts{font-family:'EB Garamond',serif;font-size:1.3rem;color:var(--navy);margin:0 0 12px}
+.prod .facts b{font-weight:500}
+.prod .btn.buy-btn{font-size:1.15rem;padding:12px 26px;border:0;cursor:pointer;font-family:inherit}
+.prod .btn.buy-btn:disabled{opacity:.6;cursor:default}
+.prod .buynote{font-size:.85rem;color:var(--soft);margin:8px 0 0;line-height:1.45}
+.prod .owned{display:inline-block;margin:0 0 6px}
+.prod h2{font-family:'EB Garamond',serif;font-weight:400;color:var(--navy);font-size:1.6rem;margin:34px 0 8px}
+
+.prod .sample{display:flex;align-items:center;gap:14px;background:#e5f5fb;border-radius:12px;padding:14px 16px}
+.prod .sample button{flex:0 0 auto;width:54px;height:54px;border-radius:50%;border:0;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prod .sample svg{width:26px;height:26px;fill:currentColor}
+.prod .sample .sb{flex:1;min-width:0}
+.prod .sample b{font-family:'EB Garamond',serif;font-weight:500;font-size:1.25rem;color:var(--navy);display:block;line-height:1.2}
+.prod .sample small{color:var(--soft)}
+.prod .sample input[type=range]{width:100%;accent-color:var(--purple);margin:4px 0 0}
+
+.prod .chapters{list-style:none;margin:0;padding:0;border-top:1px solid #e3e6ee}
+.prod .chapters li{display:flex;gap:14px;padding:14px 4px;border-bottom:1px solid #e3e6ee}
+.prod .chapters .n{flex:0 0 28px;font-family:'EB Garamond',serif;font-size:1.3rem;color:var(--mint);text-align:right;line-height:1.3}
+.prod .chapters .t{flex:1;min-width:0}
+.prod .chapters b{display:block;font-family:'EB Garamond',serif;font-weight:500;font-size:1.25rem;color:var(--navy);line-height:1.3}
+.prod .chapters em{display:block;color:var(--soft);font-size:.98rem;line-height:1.5;margin-top:2px}
+.prod .chapters .len{flex:0 0 auto;color:var(--soft);font-size:.9rem;font-variant-numeric:tabular-nums;padding-top:4px}
+.prod .also{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 0}
+.prod .previewbar{background:#fff3cd;border:1px solid #e6cf7a;border-radius:8px;padding:8px 12px;font-size:.9rem;margin:0 0 14px}
+@media(max-width:560px){
+  .prod .top{flex-direction:column;align-items:center;text-align:center}
+  .prod .pcover{flex-basis:auto;width:min(58%,220px)}
+  .prod h1{font-size:1.8rem}
+}

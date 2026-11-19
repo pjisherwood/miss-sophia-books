@@ -39,7 +39,9 @@ const GIFT = {
 /* ---- Stories & Wisdom library ----
    kind: "Stories" | "Wisdom"
    image: the picture for the piece (file in the pieces folder); look: a bookshop picture to borrow if there is none
-   related: other pieces to suggest at the bottom ("You might also like"); body: the paragraphs ("## " at the start makes a question heading) ---- */
+   related: other pieces to suggest at the bottom ("You might also like"); body: the paragraphs ("## " at the start makes a question heading)
+   FREE OR PAID: any piece or Story time item with audio is FREE unless you add  access:"paid", price:499 (pence), priceText:"£4.99", productId:"some-id".
+   A paid item is then sold on its own page (/audiobook/<slug>) and its recording is kept private (see PAID AUDIO at the bottom of this file). ---- */
 const WISDOM = [
   { slug:"a-lesson-in-joy",
     kind:"Stories",
@@ -551,3 +553,48 @@ const STORYTIME = [ {
  "A feeling rose within her, warm, steady and bright. It was as if some ancient part of her had finally remembered life was unfolding as it should, and was destined to be more beautiful than she had ever imagined."
 ]
 } ];
+
+
+/* =====================================================================
+   PAID AUDIO  (added 19 Nov 2026)
+   Each item here is sold on its own page: misssophiabooks.com/audiobook/<slug>
+   - access:"paid"; price in pence; priceText is what the page shows; productId is what Stripe and the purchase record use.
+   - bookSlug: the BOOKS entry that supplies the description, the Amazon link (url) and the Spotify link (audiobook).
+   - sample: the FREE sample. It is a normal public file in the audio folder.
+   - chapters: one entry per chapter, in order.
+       title    = the chapter title            first = the first sentence of the chapter (the page adds "..." itself)
+       file     = the chapter's file name in PRIVATE storage (never in the public audio folder)
+       duration = length in seconds
+     The book's text is never shown: only the title and that first sentence.
+   - The placeholders below are to be replaced with the real titles, first sentences, files and lengths.
+   ===================================================================== */
+const AUDIOBOOKS = [ {
+  slug:"a-christmas-dream",
+  access:"paid", price:499, priceText:"£4.99", productId:"a-christmas-dream-audiobook",
+  bookSlug:"a-christmas-dream",
+  title:"A Christmas Dream",
+  kind:"Audiobook",
+  by:"Paul Isherwood",
+  narration:"",                      /* e.g. "Read by Miss Sophia (an AI voice)". Shown on the page and in the player when filled in. */
+  cover:"covers/a-christmas-dream-2.jpg",
+  theme:{bg:"#3a0d14",accent:"peach"},
+  sample:{ audio:"audio/a-christmas-dream-sample.mp3", duration:180 },
+  chapters:[
+    { title:"Placeholder title for chapter 1",  first:"The first sentence of chapter 1 will go here.",  file:"chapter-01.mp3", duration:262 },
+    { title:"Placeholder title for chapter 2",  first:"The first sentence of chapter 2 will go here.",  file:"chapter-02.mp3", duration:281 },
+    { title:"Placeholder title for chapter 3",  first:"The first sentence of chapter 3 will go here.",  file:"chapter-03.mp3", duration:244 },
+    { title:"Placeholder title for chapter 4",  first:"The first sentence of chapter 4 will go here.",  file:"chapter-04.mp3", duration:298 },
+    { title:"Placeholder title for chapter 5",  first:"The first sentence of chapter 5 will go here.",  file:"chapter-05.mp3", duration:276 },
+    { title:"Placeholder title for chapter 6",  first:"The first sentence of chapter 6 will go here.",  file:"chapter-06.mp3", duration:255 },
+    { title:"Placeholder title for chapter 7",  first:"The first sentence of chapter 7 will go here.",  file:"chapter-07.mp3", duration:301 },
+    { title:"Placeholder title for chapter 8",  first:"The first sentence of chapter 8 will go here.",  file:"chapter-08.mp3", duration:269 },
+    { title:"Placeholder title for chapter 9",  first:"The first sentence of chapter 9 will go here.",  file:"chapter-09.mp3", duration:288 },
+    { title:"Placeholder title for chapter 10", first:"The first sentence of chapter 10 will go here.", file:"chapter-10.mp3", duration:247 },
+    { title:"Placeholder title for chapter 11", first:"The first sentence of chapter 11 will go here.", file:"chapter-11.mp3", duration:283 },
+    { title:"Placeholder title for chapter 12", first:"The first sentence of chapter 12 will go here.", file:"chapter-12.mp3", duration:296 }
+  ]
+} ];
+/* helpers used by the product page and the player */
+const bookSeconds = b => b.chapters.reduce((a,c) => a + c.duration, 0);
+const bookMinutes = b => Math.max(1, Math.round(bookSeconds(b) / 60));
+const teaser = t => String(t).replace(/[.…\s]+$/, '') + '...';
