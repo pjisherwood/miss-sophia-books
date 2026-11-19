@@ -37,3 +37,13 @@
 
 .prod .by .ai{font-size:.82em;opacity:.8;white-space:nowrap}
 .prod .top .sample{margin:2px 0 16px}
+
+/* checkout page */
+.co .co-item{display:flex;gap:16px;align-items:center;margin:8px 0 20px}
+.co .pcover.small{flex:0 0 74px;width:74px;box-shadow:3px 4px 9px rgba(0,0,0,.28)}
+.co .co-item b{display:block;font-family:'EB Garamond',serif;font-weight:500;font-size:1.4rem;color:var(--navy);line-height:1.2}
+.co .co-item .soft{display:block;font-size:.92rem}
+.co .facts{display:block;margin:2px 0 0}
+.co .tick{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px;line-height:1.5;cursor:pointer}
+.co .tick input{flex:0 0 22px;width:22px;height:22px;margin-top:2px;accent-color:var(--purple)}
+.co .buy-btn{margin-top:8px}

@@ -66,10 +66,7 @@
     if('mediaSession' in navigator){ a.addEventListener('play', () => { navigator.mediaSession.metadata = new MediaMetadata({ title:'Free sample', artist:item.title, album:'Miss Sophia Books' }); }); }
   }
 
-  /* Buy: switched on in stage 3 (Stripe). Until then the button explains itself. */
+  /* Buy: goes to our checkout page (consent ticks), then to Stripe. */
   const buy = $('#buyBtn');
-  if(buy) buy.onclick = () => {
-    if(typeof window.startCheckout === 'function') return window.startCheckout(item);
-    $('#buyNote').textContent = 'Buying is not switched on yet. It will be soon.';
-  };
+  if(buy) buy.onclick = () => { location.href = 'checkout.html?slug=' + encodeURIComponent(item.slug); };
 })();

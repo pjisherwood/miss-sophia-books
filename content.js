@@ -602,3 +602,12 @@ const bookMinutes = b => Math.max(1, Math.round(bookSeconds(b) / 60));
 const bookChapterCount = b => b.chapters.filter(c => c.n).length;
 const hrmin = sec => { const m = Math.max(1, Math.round(sec / 60)); return m >= 60 ? Math.floor(m / 60) + ' hr' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 const teaser = t => String(t).replace(/[.…\s]+$/, '') + '...';
+
+/* ---- Checkout wording (shown on our own page just before Stripe; saved with each purchase) ----
+   PAUL TO CHECK before going live: the "digital" wording is a DRAFT. It has to match what the law requires for digital content
+   (immediate access, and losing the 14-day cancellation right once listening starts). Check it against the official GOV.UK / Trading Standards guidance.
+   The "marketing" wording is yours exactly as given; its box is always UNTICKED to start with. */
+const CHECKOUT_WORDING = {
+  digital:"DRAFT, TO CHECK: I agree that my access starts straight away, and that I lose my right to cancel within 14 days once I start listening.",
+  marketing:"Occasionally send me news of new stories"
+};
