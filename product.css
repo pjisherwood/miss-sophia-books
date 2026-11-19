@@ -28,7 +28,6 @@
 .prod .chapters em{display:block;color:var(--soft);font-size:.98rem;line-height:1.5;margin-top:2px}
 .prod .chapters .len{flex:0 0 auto;color:var(--soft);font-size:.9rem;font-variant-numeric:tabular-nums;padding-top:4px}
 .prod .also{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 0}
-.prod .previewbar{background:#fff3cd;border:1px solid #e6cf7a;border-radius:8px;padding:8px 12px;font-size:.9rem;margin:0 0 14px}
 @media(max-width:560px){
   .prod .top{flex-direction:column;align-items:center;text-align:center}
   .prod .pcover{flex-basis:auto;width:min(58%,220px)}

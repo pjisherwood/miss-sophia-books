@@ -1,5 +1,5 @@
 /* After paying: confirm the payment with Stripe (through our function), then take the buyer to their stories.
-   Stage 4 adds the private library link here, so this button opens their library directly. */
+   The phone keeps the buyer's private token, so the button opens their library straight away. */
 (function(){
   const root = $('#thx');
   const id = new URLSearchParams(location.search).get('session_id');
@@ -12,11 +12,12 @@
       const r = await fetch('/api/order-status?session_id=' + encodeURIComponent(id));
       const d = await r.json().catch(() => ({}));
       if(r.ok && d.paid){
+        if(d.token && window.msbAddToken) msbAddToken(d.token, d.slug);
         const item = AUDIOBOOKS.find(a => a.slug === d.slug);
         show(`<h1 class="title">Thank you</h1>
           <p style="font-size:1.15rem">Your payment went through${item ? ' for <b>' + esc(item.title) + '</b>' : ''}.</p>
           <p>${d.email ? 'We are emailing your private link to <b>' + esc(d.email) + '</b>. ' : ''}Keep that email: it is how you get back to your stories on any phone, with no password.</p>
-          <p><a class="btn buy-btn" id="open" href="storytime.html">Open my stories</a></p>
+          <p><a class="btn buy-btn" id="open" href="storytime.html#${esc(d.slug || '')}">Open my stories</a></p>
           <p class="soft" style="font-size:.95rem">Lost the email? On the Story time page, use “Find my stories”.</p>`);
         return;
       }

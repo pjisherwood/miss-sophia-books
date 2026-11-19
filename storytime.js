@@ -34,11 +34,11 @@ const ALL = ITEMS.concat(BOOKITEMS);
   cardStatus();
   $('#storyList').addEventListener('click', e => { const b = e.target.closest('.st-card'); if(b) open(b.dataset.slug); });
 
-  /* "Your stories": the paid items this visitor owns (in stage 2 only in preview mode; stage 4 uses the private library link) */
+  /* "Your stories": the paid items this phone owns (from its private tokens, checked with Stripe) */
   function renderYours(){
     const mine = BOOKITEMS.filter(b => typeof isOwned === 'function' && isOwned(b.slug));
     const box = $('#yours'); box.hidden = !mine.length; if(!mine.length) return;
-    box.innerHTML = '<h2>Your stories' + (window.msbPreview && msbPreview() ? '<span class="tag">preview</span>' : '') + '</h2><div class="st-list">' +
+    box.innerHTML = '<h2>Your stories</h2><div class="st-list">' +
       mine.map(s => `<button class="st-card" data-slug="${s.slug}"><img src="${s.thumb}" alt="" width="76" height="76" loading="lazy"><span><b>${esc(s.title)}</b><small>${esc(s.summary)} · ${fmt(s.duration)}</small></span></button>`).join('') + '</div>';
   }
   renderYours(); cardStatus();
@@ -142,10 +142,13 @@ const ALL = ITEMS.concat(BOOKITEMS);
     $('#stNote').textContent = (story.chapters[ch].n ? 'Chapter ' + story.chapters[ch].n + ' of ' + bookChapterCount(story) : story.chapters[ch].title) + ' · ' + Math.floor(l/60) + ' of ' + mm(story.duration) + ' min' + (story.credit ? '\n' + story.credit : '');
     markRows();
   }
-  /* The chapter files are private. In stage 2 these are placeholder tones; stage 4 asks a Netlify Function for short-lived links
+  /* The chapter files are private. A Netlify Function checks this phone's tokens with Stripe and returns short-lived links
      (fetched all at once when the book opens, so tapping a chapter can play straight away on an iPhone). */
   async function loadUrls(b){
-    urls = {}; b.chapters.forEach((c,i) => { urls[i] = 'audio/demo/chapter-' + String(i+1).padStart(2,'0') + '.mp3'; });
+    urls = {};
+    let list = null; try{ list = await msbAudioLinks(b.slug); }catch(e){}
+    if(!list || list.length !== b.chapters.length){ $('#stNote').textContent = 'Sorry, we could not open this story. Please check you are online and try again.'; return false; }
+    list.forEach((u,i) => { urls[i] = u; }); return true;
   }
   function selectChapter(i, play){
     const c = story.chapters[i]; if(!c || !urls[i]) return;
@@ -177,7 +180,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${c.n || ''}</span><span class="ct"><b>${esc(c.title)}</b>${c.first ? `<em>${esc(teaser(c.first))}</em>` : ''}</span><span class="cl"></span></button>`).join('');
     $('#playBtn').disabled = false; $('#seek').disabled = false;
     if(location.hash.slice(1) !== b.slug) history.pushState(null, '', '#' + b.slug);
-    const tok = ++loadToken; await loadUrls(b); if(tok !== loadToken || story !== b) return;
+    const tok = ++loadToken; const okU = await loadUrls(b); if(tok !== loadToken || story !== b || !okU) return;
     selectChapter(resumeIndex(b, st), false);
   }
   function setPara(i){
@@ -253,7 +256,16 @@ const ALL = ITEMS.concat(BOOKITEMS);
     setPlayIcon(false); try{ localStorage.removeItem(key()); localStorage.setItem('stdone-' + story.slug, '1'); }catch(e){} audio.currentTime = 0; paint(0); });
   audio.addEventListener('timeupdate', () => paint(audio.currentTime));
   audio.addEventListener('loadedmetadata', () => { audio.playbackRate = rate; if(!story) return; $('#tAll').textContent = fmt(dur()); if(pendingSeek != null){ audio.currentTime = pendingSeek; pendingSeek = null; } });
-  audio.addEventListener('error', () => { if(story && audio.getAttribute('src')) $('#stNote').textContent = 'Sorry, the recording could not be loaded.'; });
+  let relinking = false;
+  audio.addEventListener('error', async () => {
+    if(!story || !audio.getAttribute('src')) return;
+    if(isBook() && !relinking){ /* the private links last 6 hours: get fresh ones and carry on from the same place */
+      relinking = true; const at = audio.currentTime || 0, was = !audio.paused, b = story, i = ch;
+      try{ if(await loadUrls(b) && story === b){ selectChapter(i, was); if(at > 3) seekTo(at); relinking = false; return; } }catch(e){}
+      relinking = false;
+    }
+    $('#stNote').textContent = 'Sorry, the recording could not be loaded.';
+  });
 
   $('#playBtn').onclick = toggle; $('#words').onclick = toggle; $('#cover').onclick = toggle;
   $('#back').onclick = () => seekTo(audio.currentTime - 15);
@@ -306,6 +318,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     else if(story) showBrowse();
   }
   setPlayIcon(false);
-  route();
+  /* if this phone has tokens, confirm them first so a deep link to a story it owns opens properly */
+  (async () => { if(window.msbTokens && msbTokens().length){ await msbRefresh(); renderYours(); cardStatus(); } route(); })();
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();

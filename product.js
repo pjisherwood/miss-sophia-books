@@ -23,7 +23,6 @@
   const icoPause = '<svg viewBox="0 0 24 24"><rect x="6" y="4.5" width="4.2" height="15" rx="1.2"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2"/></svg>';
 
   root.innerHTML = `
-    ${window.msbPreview && msbPreview() ? '<p class="previewbar">Preview mode is on in this browser (placeholder audio). Add ?preview=0 to the address to turn it off.</p>' : ''}
     <div class="top">
       <div class="pcover" style="background-image:url('${esc(item.cover)}')" role="img" aria-label="Cover of ${esc(item.title)}"></div>
       <div>
@@ -69,4 +68,6 @@
   /* Buy: goes to our checkout page (consent ticks), then to Stripe. */
   const buy = $('#buyBtn');
   if(buy) buy.onclick = () => { location.href = 'checkout.html?slug=' + encodeURIComponent(item.slug); };
+  /* a phone that has tokens: confirm them, and if this item is newly owned show "Listen now" */
+  if(!owned && window.msbTokens && msbTokens().length){ msbRefresh().then(o => { if(o.indexOf(item.slug) >= 0) location.reload(); }); }
 })();
