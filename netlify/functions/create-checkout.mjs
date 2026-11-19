@@ -25,6 +25,8 @@ export default async (req) => {
   f.set('line_items[0][price_data][currency]', 'gbp');
   f.set('line_items[0][price_data][unit_amount]', String(item.price));
   f.set('line_items[0][price_data][product_data][name]', item.title + (item.kind === 'Audiobook' ? ' (audiobook)' : ''));
+  // Stripe's Managed Payments needs a product tax category on every item (set per item in content.js)
+  if (item.taxCode) f.set('line_items[0][price_data][product_data][tax_code]', item.taxCode);
   f.set('success_url', base + '/thanks.html?session_id={CHECKOUT_SESSION_ID}');
   f.set('cancel_url', base + '/audiobook/' + item.slug);
   // the purchase record: what was bought, and exactly what the buyer agreed to and when

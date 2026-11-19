@@ -572,6 +572,7 @@ const STORYTIME = [ {
 const AUDIOBOOKS = [ {
   slug:"a-christmas-dream",
   access:"paid", price:499, priceText:"£4.99", productId:"a-christmas-dream-audiobook",
+    taxCode:"txcd_10301000", // Stripe product tax category "Audiobook". PAUL TO CHECK with Stripe/an adviser that this is the right one for your streamed audiobook.
   bookSlug:"a-christmas-dream",
   title:"A Christmas Dream",
   kind:"Audiobook",
