@@ -25,6 +25,8 @@ export default async (req) => {
   f.set('line_items[0][price_data][currency]', 'gbp');
   f.set('line_items[0][price_data][unit_amount]', String(item.price));
   f.set('line_items[0][price_data][product_data][name]', item.title + (item.kind === 'Audiobook' ? ' (audiobook)' : ''));
+  // The price on the site is the price paid: VAT is included in it, not added on top
+  f.set('line_items[0][price_data][tax_behavior]', 'inclusive');
   // Stripe's Managed Payments needs a product tax category on every item (set per item in content.js)
   if (item.taxCode) f.set('line_items[0][price_data][product_data][tax_code]', item.taxCode);
   f.set('success_url', base + '/thanks.html?session_id={CHECKOUT_SESSION_ID}');
