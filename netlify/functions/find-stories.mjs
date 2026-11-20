@@ -1,4 +1,4 @@
-// "Find my stories": the buyer types the email they paid with; if Stripe has paid purchases for it, we email a fresh private link.
+// "Restore purchases": the buyer types the email they paid with; if Stripe has paid purchases for it, we email a fresh private link.
 // The answer is always the same, so nobody can use this to find out who has bought something.
 import { json, stripe, signToken, hasPaidStory, loadContent, accessEmail, sendEmail, SITE_URL } from './_shared.mjs';
 

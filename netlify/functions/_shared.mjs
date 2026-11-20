@@ -156,7 +156,7 @@ export function accessEmail({ link, titles, findUrl, siteUrl = 'https://misssoph
     'Thank you for choosing ' + what + '. I am so glad it has found its way to you.', '',
     'This is your own personal link. Open it on your phone and your stories are waiting, with no password:', '',
     link, '',
-    'Keep this email somewhere safe. If you ever change phone, "Find my stories" will send you a fresh link: ' + findUrl, '',
+    'Keep this email somewhere safe. If you ever change phone, "Restore purchases" will send you a fresh link: ' + findUrl, '',
     'If a friend might enjoy it too, they are always welcome to find their own copy at ' + siteUrl.replace(/^https?:\/\//, '') + '.', '',
     agreed, '',
     'With warm wishes,', 'Miss Sophia Books',
@@ -166,7 +166,7 @@ export function accessEmail({ link, titles, findUrl, siteUrl = 'https://misssoph
 <p>Thank you for choosing <b>${h(what)}</b>. I am so glad it has found its way to you.</p>
 <p>This is your own personal link. Open it on your phone and your stories are waiting, with no password:</p>
 <p><a href="${h(link)}" style="display:inline-block;background:#6b5ca5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:24px">Open my stories</a></p>
-<p>Keep this email somewhere safe. If you ever change phone, <a href="${h(findUrl)}">“Find my stories”</a> will send you a fresh link.</p>
+<p>Keep this email somewhere safe. If you ever change phone, <a href="${h(findUrl)}">“Restore purchases”</a> will send you a fresh link.</p>
 <p>If a friend might enjoy it too, they are always welcome to find their own copy at <a href="${h(siteUrl)}">${h(siteUrl.replace(/^https?:\/\//, ''))}</a>.</p>
 <p style="font-size:15px;color:#556">${h(agreed)}</p>
 <p>With warm wishes,<br>Miss Sophia Books</p></div>`;

@@ -2,7 +2,7 @@
 (function(){
   const root = $('#ms');
   const t = new URLSearchParams(location.search).get('t');
-  const bad = () => { root.innerHTML = '<h1 class="title">We could not open that link</h1><p>The link may be incomplete. Please open it again from your email, or <a href="find-stories.html">ask for a new one with “Find my stories”</a>.</p><p><a class="btn" href="storytime.html">Go to Story time</a></p>'; };
+  const bad = () => { root.innerHTML = '<h1 class="title">We could not open that link</h1><p>The link may be incomplete. Please open it again from your email, or <a href="find-stories.html">ask for a new one with “Restore purchases”</a>.</p><p><a class="btn" href="storytime.html">Go to Story time</a></p>'; };
   if(!t){ bad(); return; }
   (async () => {
     msbAddToken(t);

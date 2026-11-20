@@ -22,7 +22,7 @@ const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Story ti
   const f = $('#site-footer');
   if(f) f.innerHTML = `<div class="site-footer"><div class="logo">${lamp}</div>
     Miss Sophia Books · a quiet place for stories and wisdom<br>
-    By my friend Paul Isherwood — <a href="https://paulisherwood.com" style="color:inherit">visit his own site</a><br>${/^\/(audiobook\/|storytime|listen)/.test(location.pathname) ? '<a href="find-stories.html" style="color:inherit">Already bought something? Find my stories</a><br>' : ''}© Paul Isherwood</div>`;
+    By my friend Paul Isherwood — <a href="https://paulisherwood.com" style="color:inherit">visit his own site</a><br>${/^\/(audiobook\/|storytime|listen)/.test(location.pathname) ? '<a href="find-stories.html" style="color:inherit">Restore purchases</a><br>' : ''}© Paul Isherwood</div>`;
 })();
 
 /* chat: real ElevenLabs widget when an agent id is set, otherwise a placeholder */

@@ -18,7 +18,7 @@
           <p style="font-size:1.15rem">Your payment went through${item ? ' for <b>' + esc(item.title) + '</b>' : ''}.</p>
           <p>${d.email ? 'We are emailing your private link to <b>' + esc(d.email) + '</b>. ' : ''}Keep that email: it is how you get back to your stories on any phone, with no password.</p>
           <p><a class="btn buy-btn" id="open" href="storytime.html#${esc(d.slug || '')}">Open my stories</a></p>
-          <p class="soft" style="font-size:.95rem">Lost the email? <a href=\"find-stories.html\">Find my stories</a> sends you a new link.</p>`);
+          <p class="soft" style="font-size:.95rem">Lost the email? <a href=\"find-stories.html\">Restore purchases</a> sends you a new link.</p>`);
         return;
       }
       if(r.ok && !d.paid){ show('<h1 class="title">We have not received your payment yet</h1><p>If you were charged, please wait a moment and refresh this page. Nothing is lost.</p><p><a class="btn" href="javascript:location.reload()">Check again</a></p>'); return; }

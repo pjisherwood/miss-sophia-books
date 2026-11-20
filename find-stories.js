@@ -1,4 +1,4 @@
-/* "Find my stories": asks the server to email a fresh private link to the address used at payment. The answer is always the same, whoever the address belongs to. */
+/* "Restore purchases": asks the server to email a fresh private link to the address used at payment. The answer is always the same, whoever the address belongs to. */
 (function(){
   const form = $('#ff'), em = $('#em'), go = $('#go'), msg = $('#msg');
   form.addEventListener('submit', async (e) => {
