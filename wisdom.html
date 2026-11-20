@@ -18,7 +18,7 @@
 <script>
   const view = $('#view');
   const picBg = w => w.image ? `url('${w.image}')` : themeBg(themeById(w.look));
-  const KINDS = ['All', ...(WISDOM.some(w => w.audio) ? ['Listen'] : []), ...new Set(WISDOM.map(w => w.kind))];
+  const KINDS = ['All', ...new Set(WISDOM.map(w => w.kind))];
   let kind = 'All';
 
   function currentSlug(){
