@@ -29,12 +29,16 @@ export function findProduct(content, productId) {
   return paid.find(x => x.access === 'paid' && x.productId === productId) || null;
 }
 
-export async function stripe(method, pathname, form) {
+export async function stripe(method, pathname, form, opts = {}) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) { const e = new Error('STRIPE_SECRET_KEY is not set'); e.code = 'nokey'; throw e; }
   const res = await fetch(STRIPE_API + pathname, {
     method,
-    headers: { authorization: 'Bearer ' + key, ...(form ? { 'content-type': 'application/x-www-form-urlencoded' } : {}) },
+    headers: {
+      authorization: 'Bearer ' + key,
+      ...(opts.version ? { 'stripe-version': opts.version } : {}),
+      ...(form ? { 'content-type': 'application/x-www-form-urlencoded' } : {}),
+    },
     body: form ? form.toString() : undefined,
   });
   const data = await res.json().catch(() => ({}));
@@ -72,15 +76,26 @@ export function verifyToken(token) {
   } catch { return null; }
 }
 
-// Which items does this phone own? Asks Stripe about every paid session in the tokens.
+// A fully refunded payment no longer opens the story. Needs the session fetched with expand[]=payment_intent.latest_charge.
+// If Stripe did not give us the charge (for example it is not expanded), we do NOT lock the buyer out.
+export const isRefunded = (s) => {
+  const pi = s && s.payment_intent;
+  const ch = pi && typeof pi === 'object' ? pi.latest_charge : null;
+  return !!(ch && typeof ch === 'object' && ch.refunded === true);
+};
+export const hasPaidStory = (s) => !!(s && s.payment_status === 'paid' && s.metadata && s.metadata.product_slug && !isRefunded(s));
+
+// Which items does this phone own? Asks Stripe about every paid (and not fully refunded) session in the tokens.
 export async function ownedFromTokens(tokens) {
   const ids = new Set();
   (Array.isArray(tokens) ? tokens.slice(0, 10) : []).forEach(t => { const s = verifyToken(t); if (s) s.slice(0, 20).forEach(x => ids.add(x)); });
   const owned = new Set();
   await Promise.all([...ids].map(async id => {
     try {
-      const s = await stripe('GET', '/v1/checkout/sessions/' + id);
-      if (s.payment_status === 'paid' && s.metadata && s.metadata.product_slug) owned.add(s.metadata.product_slug);
+      let s;
+      try { s = await stripe('GET', '/v1/checkout/sessions/' + id + '?expand[]=payment_intent.latest_charge'); }
+      catch (e) { if (e.code === 'nokey') throw e; s = await stripe('GET', '/v1/checkout/sessions/' + id); }
+      if (hasPaidStory(s)) owned.add(s.metadata.product_slug);
     } catch (e) { if (e.code === 'nokey') throw e; }
   }));
   return [...owned];
@@ -112,4 +127,65 @@ export function r2Config() {
   const { R2_ACCOUNT_ID: acct, R2_ACCESS_KEY_ID: akid, R2_SECRET_ACCESS_KEY: secret, R2_BUCKET: bucket } = process.env;
   if (!acct || !akid || !secret || !bucket) { const e = new Error('R2 is not configured'); e.code = 'nor2'; throw e; }
   return { host: `${acct}.r2.cloudflarestorage.com`, bucket, accessKeyId: akid, secret };
+}
+
+// ---------- Stage 5: webhook check, access email ----------
+export const SITE_URL = () => (process.env.SITE_URL || 'https://misssophiabooks.com').replace(/\/$/, '');
+
+// Stripe signs every webhook call: header "t=<time>,v1=<signature>". We recompute it from the raw body and the endpoint's signing secret.
+export function verifyStripeSignature(raw, header, secret, toleranceSeconds = 300, nowSeconds = Math.floor(Date.now() / 1000)) {
+  if (!raw || !header || !secret) return false;
+  const parts = String(header).split(',').map(p => p.trim().split('='));
+  const t = (parts.find(p => p[0] === 't') || [])[1];
+  const sigs = parts.filter(p => p[0] === 'v1').map(p => p[1]);
+  if (!t || !sigs.length || !/^\d+$/.test(t) || Math.abs(nowSeconds - Number(t)) > toleranceSeconds) return false;
+  const good = Buffer.from(crypto.createHmac('sha256', secret).update(t + '.' + raw).digest('hex'));
+  return sigs.some(s => { const b = Buffer.from(s || ''); return b.length === good.length && crypto.timingSafeEqual(b, good); });
+}
+
+const h = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// The access email: one private link that opens the buyer's library on any phone. No password.
+export function accessEmail({ link, titles, findUrl }) {
+  const list = titles.length ? titles : ['your stories'];
+  const what = list.join(' and ');
+  const subject = 'Your stories from Miss Sophia Books';
+  const text = [
+    'Hello,', '',
+    'Thank you for buying ' + what + '.', '',
+    'Here is your private link. Open it on your phone and your stories are waiting for you, with no password:', '',
+    link, '',
+    'Please keep this email: it is how you get back to your stories on any phone. Anyone with the link can listen, so please do not share it.', '',
+    'If you ever lose it, you can ask for a new link here: ' + findUrl, '',
+    'If anything is not right, just reply to this email.', '',
+    'With warm wishes,', 'Miss Sophia Books',
+  ].join('\n');
+  const html = `<div style="font-family:Georgia,serif;font-size:17px;line-height:1.55;color:#223;max-width:34em">
+<p>Hello,</p>
+<p>Thank you for buying <b>${h(what)}</b>.</p>
+<p>Here is your private link. Open it on your phone and your stories are waiting for you, with no password:</p>
+<p><a href="${h(link)}" style="display:inline-block;background:#6b5ca5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:24px">Open my stories</a></p>
+<p style="font-size:15px;color:#556">Please keep this email: it is how you get back to your stories on any phone. Anyone with the link can listen, so please do not share it.</p>
+<p style="font-size:15px;color:#556">If you ever lose it, you can <a href="${h(findUrl)}">ask for a new link here</a>. If anything is not right, just reply to this email.</p>
+<p>With warm wishes,<br>Miss Sophia Books</p></div>`;
+  return { subject, text, html };
+}
+
+// Sends one email through Resend (resend.com). RESEND_API_KEY, and optionally MAIL_FROM / MAIL_REPLY_TO, are environment variables.
+// idempotencyKey makes sure that if Stripe calls us twice for the same purchase, the buyer is not emailed twice.
+export async function sendEmail({ to, subject, text, html, idempotencyKey }) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) { const e = new Error('RESEND_API_KEY is not set'); e.code = 'nomail'; throw e; }
+  const res = await fetch((process.env.RESEND_API_BASE || 'https://api.resend.com') + '/emails', {
+    method: 'POST',
+    headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json', ...(idempotencyKey ? { 'idempotency-key': idempotencyKey } : {}) },
+    body: JSON.stringify({
+      from: process.env.MAIL_FROM || 'Miss Sophia Books <sophia@misssophiabooks.com>',
+      to: [to],
+      reply_to: process.env.MAIL_REPLY_TO || 'misssophiabooks@gmail.com',
+      subject, text, html,
+    }),
+  });
+  if (!res.ok) { const d = await res.json().catch(() => ({})); const e = new Error('Resend error ' + res.status + ' ' + (d.message || '')); e.status = res.status; throw e; }
+  return true;
 }

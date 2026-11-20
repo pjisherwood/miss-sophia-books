@@ -2,3 +2,5 @@
 /listen  /storytime.html  301
 /listen/the-doorway  /listen/the-wisdom-of-aloharin  301
 /audiobook/*  /product.html  200
+/terms-of-service  /terms-of-service.html  200
+/privacy  /privacy.html  200
