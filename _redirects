@@ -1,5 +1,10 @@
 /wisdom/*  /wisdom.html  200
-/listen  /storytime.html  301
+/listen  /library  301
+/storytime  /library  301
+/storytime.html  /library  301
+/start  /  301
+/start.html  /  301
+/library  /library.html  200
 /listen/the-doorway  /listen/the-wisdom-of-aloharin  301
 /audiobook/*  /product.html  200
 /terms-of-service  /terms-of-service.html  200

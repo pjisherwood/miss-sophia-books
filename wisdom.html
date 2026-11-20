@@ -36,7 +36,7 @@
     return { cls:'', label:'Listen · ' + mins(w.duration) + ' min', pct: 0 };
   }
   const PLAY = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:currentColor;flex:0 0 auto"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></svg>';
-  const listenLink = w => { const l = listenInfo(w); return l ? `<a class="lis ${l.cls}" href="storytime.html#${w.slug}">${l.cls==='done'?'':PLAY}${esc(l.label)}${l.cls==='part'?`<i style="width:${l.pct}%"></i>`:''}</a>` : ''; };
+  const listenLink = w => { const l = listenInfo(w); return l ? `<a class="lis ${l.cls}" href="library.html#${w.slug}">${l.cls==='done'?'':PLAY}${esc(l.label)}${l.cls==='part'?`<i style="width:${l.pct}%"></i>`:''}</a>` : ''; };
   const pill = w => { const l = listenInfo(w); return l ? `<span class="lis ${l.cls}">${l.cls==='done'?'':PLAY}${esc(l.label)}${l.cls==='part'?`<i style="width:${l.pct}%"></i>`:''}</span>` : ''; };
 
   function renderList(){
@@ -70,7 +70,7 @@
       <h2 class="eyebrow">${esc(w.kind)}</h2>
       <h1 class="title">${esc(w.title)}</h1>
       ${w.date?`<div class="soft">${esc(w.date)}</div>`:''}
-      ${w.audio?`<a class="listenbtn ${listenInfo(w).cls}" href="storytime.html#${w.slug}">${listenInfo(w).cls==='done'?'':PLAY}${esc(listenInfo(w).label)}</a><p class="soft" style="font-size:.9rem;margin:6px 0 14px">Read aloud by Miss Sophia (an AI voice). Opens the story player.</p>`:''}
+      ${w.audio?`<a class="listenbtn ${listenInfo(w).cls}" href="library.html#${w.slug}">${listenInfo(w).cls==='done'?'':PLAY}${esc(listenInfo(w).label)}</a><p class="soft" style="font-size:.9rem;margin:6px 0 14px">Read aloud by Miss Sophia (an AI voice). Opens the story player.</p>`:''}
       ${w.body.map(p=>p.startsWith('## ')?`<h3 class="q">${esc(p.slice(3))}</h3>`:`<p>${esc(p)}</p>`).join('')}
       <div class="actions">${w.download?`<a class="btn" href="${w.download}">${esc(w.downloadText||'Download')}</a>`:''}<button class="btn ghost" id="share" style="font:inherit;font-weight:600;cursor:pointer">Share this with someone</button><span class="toast" id="toast"></span></div>
       <h2 class="eyebrow" style="margin-top:34px">You might also like</h2>

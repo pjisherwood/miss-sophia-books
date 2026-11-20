@@ -28,7 +28,7 @@ const NEW_ON_SHELF = {
   url: "audiobook/a-christmas-dream"
 };
 /* Before 20 Nov 2026 this pointed at The Wisdom of Aloharin audiobook:
-   { icon:"🎧", title:"The Wisdom of Aloharin audiobook", text:"Listen to a few quiet minutes, narrated by Miss Sophia.", url:"storytime.html#the-wisdom-of-aloharin" } */
+   { icon:"🎧", title:"The Wisdom of Aloharin audiobook", text:"Listen to a few quiet minutes, narrated by Miss Sophia.", url:"library.html#the-wisdom-of-aloharin" } */
 
 /* ---- A little gift from Miss Sophia: ONE item at a time ---- */
 const GIFT = {

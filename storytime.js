@@ -1,4 +1,4 @@
-/* Story time: choose a story, then a one-screen player coloured to match its cover. */
+/* Library: what you own, are part-way through, or have finished; opens a one-screen player coloured to match the cover. (Called Story time until 20 Nov 2026.) */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ITEMS = STORYTIME.concat(WISDOM.filter(w => w.audio).map(w => ({ slug:w.slug, title:w.title, summary:w.summary, chapter:w.kind, cover:w.playerImage || w.image || w.cover, thumb:w.thumb, audio:w.audio, duration:w.duration, marks:w.marks, body:w.body, theme:w.theme, credit:'' })));
@@ -20,8 +20,8 @@ const ALL = ITEMS.concat(BOOKITEMS);
   $('#pic').style.backgroundImage = `url('${small() && STORYTIME_PICTURE.small ? STORYTIME_PICTURE.small : STORYTIME_PICTURE.image}')`;
   $('#pic').setAttribute('aria-label', STORYTIME_PICTURE.alt);
 
-  const NAVITEMS = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Story time","storytime.html"],["Books","books.html"],["Ask Miss Sophia","ask.html"],["Start here","start.html"]];
-  $('#menu').innerHTML = NAVITEMS.map(([n,u]) => `<a href="${u}"${u === 'storytime.html' ? ' aria-current="page"' : ''}>${esc(n)}</a>`).join('');
+  const NAVITEMS = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Books","books.html"],["Library","library.html"],["Ask Miss Sophia","ask.html"]];
+  $('#menu').innerHTML = NAVITEMS.map(([n,u]) => `<a href="${u}"${u === 'library.html' ? ' aria-current="page"' : ''}>${esc(n)}</a>`).join('');
   $('#menuBtn').onclick = () => { const m = $('#menu'); m.hidden = !m.hidden; $('#menuBtn').setAttribute('aria-expanded', !m.hidden); };
   document.addEventListener('click', e => { if(!e.target.closest('#menu') && !e.target.closest('#menuBtn')) $('#menu').hidden = true; });
 
@@ -34,22 +34,25 @@ const ALL = ITEMS.concat(BOOKITEMS);
   const dur = () => (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (isBook() ? story.chapters[ch].duration : (story && story.duration)) || 0;
   const key = () => isBook() ? 'stpos-' + story.slug + '-c' + (ch + 1) : 'stpos-' + story.slug;
 
-  $('#storyList').innerHTML = ITEMS.map(s => `<button class="st-card" data-slug="${s.slug}">${s.cover ? `<img src="${s.thumb || s.cover}" alt="" width="76" height="76" loading="lazy">` : ''}<span><b>${esc(s.title)}</b><small>${esc(s.summary)}${s.duration ? ' · ' + fmt(s.duration) : ''}</small></span></button>`).join('');
   function lsv(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function cardStatus(){ document.querySelectorAll('.st-card').forEach(b => { const s = ALL.find(x => x.slug === b.dataset.slug); const pos = parseFloat(lsv('stpos-' + s.slug)); const m = Math.max(1, Math.round(s.duration/60));
     let t = ''; if(s.chapters) t = bookStatus(s); else if(pos > 5 && pos < s.duration - 10) t = 'In progress · ' + Math.max(1, Math.round((s.duration - pos)/60)) + ' min left'; else if(lsv('stdone-' + s.slug)) t = '✓ Listened';
     let e = b.querySelector('.stat'); if(!e){ e = document.createElement('em'); e.className = 'stat'; b.querySelector('span').appendChild(e); } e.textContent = t; e.hidden = !t; }); }
-  cardStatus();
-  $('#storyList').addEventListener('click', e => { const b = e.target.closest('.st-card'); if(b) open(b.dataset.slug); });
 
-  /* "Your stories": the paid items this phone owns (from its private tokens, checked with Stripe) */
+  /* The library: only what is yours on this device. Sections: Continue listening (part-way), Your audiobooks (bought, from the private tokens, checked with Stripe), Listened (finished). Nothing else is listed here: finding stories is done on Stories & Wisdom. */
+  const card = s => `<button class="st-card" data-slug="${s.slug}">${s.cover ? `<img src="${s.thumb || s.cover}" alt="" width="76" height="76" loading="lazy">` : ''}<span><b>${esc(s.title)}</b><small>${esc(s.summary || '')}${s.duration ? ' · ' + fmt(s.duration) : ''}</small></span></button>`;
   function renderYours(){
     const mine = BOOKITEMS.filter(b => typeof isOwned === 'function' && isOwned(b.slug));
-    const box = $('#yours'); box.hidden = !mine.length; if(!mine.length) return;
-    box.innerHTML = '<h2>Your stories</h2><div class="st-list">' +
-      mine.map(s => `<button class="st-card" data-slug="${s.slug}"><img src="${s.thumb}" alt="" width="76" height="76" loading="lazy"><span><b>${esc(s.title)}</b><small>${esc(s.summary)} · ${fmt(s.duration)}</small></span></button>`).join('') + '</div>';
+    const started = ITEMS.filter(s => { const p = parseFloat(lsv('stpos-' + s.slug)); return p > 5 && p < s.duration - 10; });
+    const finished = ITEMS.filter(s => lsv('stdone-' + s.slug) && !started.includes(s));
+    const sec = (h, list) => list.length ? `<h2>${h}</h2><div class="st-list">${list.map(card).join('')}</div>` : '';
+    const box = $('#yours'); box.hidden = false;
+    box.innerHTML = sec('Continue listening', started) + sec('Your audiobooks', mine) + sec('Listened', finished);
+    if(!started.length && !mine.length && !finished.length) box.innerHTML = '<div class="empty"><p>Nothing here yet. When you listen to a story, or buy an audiobook, it will wait for you here.</p><p><a class="btn" href="wisdom.html">Find a story to listen to</a></p></div>';
+    else box.innerHTML += '<p class="devnote">Your library is kept on this device. Bought an audiobook already? <a href="find-stories.html">Restore purchases</a> on any device.</p>';
+    cardStatus();
   }
-  renderYours(); cardStatus();
+  renderYours();
   $('#yours').addEventListener('click', e => { const b = e.target.closest('.st-card'); if(b) open(b.dataset.slug); });
 
   /* chapter memory (on this phone): stpos-<slug>-cN = seconds into chapter N; stdone-<slug>-cN = finished; stlast-<slug> = chapter last played */
@@ -186,7 +189,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     $('#cover').src = b.cover; $('#cover').alt = 'Cover of ' + b.title;
     themeFromStory(b);
     $('#stTitle').textContent = b.title; $('#stSub').classList.remove('big');
-    document.title = b.title + ' – Story time';
+    document.title = b.title + ' – Library';
     $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${c.n || ''}</span><span class="ct"><b>${esc(c.title)}</b>${c.first ? `<em>${esc(teaser(c.first))}</em>` : ''}</span><span class="cl"></span></button>`).join('');
     $('#playBtn').disabled = false; $('#seek').disabled = false;
     if(location.hash.slice(1) !== b.slug) history.pushState(null, '', '#' + b.slug);
@@ -205,7 +208,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     audio.pause(); story = null; loadToken++; setBookMode(false); renderYours(); cardStatus();
     $('#player').hidden = true; $('#browse').hidden = false; $('#sheet').hidden = true; $('#shareBtn').hidden = true;
     const r = document.documentElement.style; ['--bg1','--bg2','--accent','--on-accent'].forEach(v => r.removeProperty(v)); applyLook();
-    $('#themeColor').content = CHAR2; document.title = 'Story time – Miss Sophia Books';
+    $('#themeColor').content = CHAR2; document.title = 'Library – Miss Sophia Books';
   }
   function open(slug){
     story = ALL.find(s => s.slug === slug); if(!story) return showBrowse();
@@ -221,7 +224,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     $('#cover').src = story.cover || STORYTIME_PICTURE.small; $('#cover').alt = 'Cover of ' + story.title;
     themeFromStory(story);
     $('#stTitle').textContent = story.title; $('#stSub').textContent = story.chapter || ''; $('#stSub').classList.toggle('big', !!story.sample);
-    document.title = story.title + ' – Story time';
+    document.title = story.title + ' – Library';
     $('#tNow').textContent = '0:00'; $('#tAll').textContent = fmt(story.duration);
     $('#seek').value = 0; setPlayIcon(false);
     if(story.audio){ const rd = 'Read by Miss Sophia (an AI voice)' + (story.credit && !story.sample ? ' · ' + story.credit : '');
@@ -314,7 +317,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(isBook()){ const c = story.chapters[ch];   /* lock screen: the book title and the current chapter */
       navigator.mediaSession.metadata = new MediaMetadata({ title: c.n ? 'Chapter ' + c.n + ': ' + c.title : c.title, artist: story.title, album: 'by ' + story.by, artwork: art });
       navigator.mediaSession.setActionHandler('previoustrack', () => stepChapter(-1)); navigator.mediaSession.setActionHandler('nexttrack', () => stepChapter(1)); }
-    else { navigator.mediaSession.metadata = new MediaMetadata({ title: story.title, artist: 'Miss Sophia', album: story.credit || 'Story time', artwork: art });
+    else { navigator.mediaSession.metadata = new MediaMetadata({ title: story.title, artist: 'Miss Sophia', album: story.credit || 'Miss Sophia Books', artwork: art });
       try{ navigator.mediaSession.setActionHandler('previoustrack', null); navigator.mediaSession.setActionHandler('nexttrack', null); }catch(e){} }
     navigator.mediaSession.setActionHandler('play', toggle); navigator.mediaSession.setActionHandler('pause', toggle);
     navigator.mediaSession.setActionHandler('seekbackward', () => seekTo(audio.currentTime - 15));
@@ -322,7 +325,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
   }
   function route(){
     const pm = location.pathname.match(/^\/listen\/([^\/]+?)(?:\.html)?$/);
-    if(pm && ALL.some(s => s.slug === decodeURIComponent(pm[1]))){ const sl = decodeURIComponent(pm[1]); history.replaceState(null, '', '/storytime.html#' + sl); }
+    if(pm && ALL.some(s => s.slug === decodeURIComponent(pm[1]))){ const sl = decodeURIComponent(pm[1]); history.replaceState(null, '', '/library.html#' + sl); }
     const want = location.hash.slice(1);
     if(want && ALL.some(s => s.slug === want)){ if(!story || story.slug !== want) open(want); }
     else if(story) showBrowse();

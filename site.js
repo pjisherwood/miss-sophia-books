@@ -9,7 +9,7 @@ const themeById = id => THEMES.find(t => t.id === id) || THEMES[0];
 const CHOOSABLE = () => THEMES.filter(t => !t.hidden);
 
 /* header + footer (edit the menu here once; every page follows) */
-const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Story time","storytime.html"],["Books","books.html"],["Ask Miss Sophia","ask.html"],["Start here","start.html"]];
+const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Books","books.html"],["Library","library.html"],["Ask Miss Sophia","ask.html"]];
 (function(){
   const file = location.pathname.split('/').pop() || 'index.html';
   const here = location.pathname.startsWith('/wisdom/') ? 'wisdom.html' : file;
@@ -22,7 +22,7 @@ const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Story ti
   const f = $('#site-footer');
   if(f) f.innerHTML = `<div class="site-footer"><div class="logo">${lamp}</div>
     Miss Sophia Books · a quiet place for stories and wisdom<br>
-    By my friend Paul Isherwood — <a href="https://paulisherwood.com" style="color:inherit">visit his own site</a><br>${/^\/(audiobook\/|storytime|listen)/.test(location.pathname) ? '<a href="find-stories.html" style="color:inherit">Restore purchases</a><br>' : ''}<a href="/privacy" style="color:inherit">Privacy</a> · <a href="/terms-of-service" style="color:inherit">Terms</a><br>© Paul Isherwood</div>`;
+    By my friend Paul Isherwood — <a href="https://paulisherwood.com" style="color:inherit">visit his own site</a><br>${/^\/(audiobook\/|library|storytime|listen)/.test(location.pathname) ? '<a href="find-stories.html" style="color:inherit">Restore purchases</a><br>' : ''}<a href="/privacy" style="color:inherit">Privacy</a> · <a href="/terms-of-service" style="color:inherit">Terms</a><br>© Paul Isherwood</div>`;
 })();
 
 /* chat: real ElevenLabs widget when an agent id is set, otherwise a placeholder */

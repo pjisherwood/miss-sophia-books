@@ -108,3 +108,10 @@ body{background:var(--bg2)}
 @media(max-width:800px) and (max-height:780px){.player.bookmode .cover{max-height:18dvh}}
 @media(max-width:800px) and (max-height:700px){.player.bookmode .cover{max-height:14dvh}}
 .player.bookmode .meta .mt span{white-space:normal}
+
+/* Library: empty message and the small note at the bottom */
+.empty{padding:6px 0 18px}
+.empty p{margin:0 0 14px;opacity:.85;line-height:1.55}
+.devnote{margin:22px 0 0;font-size:.85rem;opacity:.7;line-height:1.5}
+.devnote a{color:inherit}
+.empty .btn{display:inline-block;background:#ec8b34;color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:10px}

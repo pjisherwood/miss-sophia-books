@@ -36,7 +36,7 @@
             <input type="range" id="spSeek" min="0" max="1000" value="0" aria-label="Position in the sample"></div>
         </div>` : ''}
         ${owned
-          ? `<p class="owned soft">You have this one.</p><br><a class="btn buy-btn" href="storytime.html#${esc(item.slug)}">Listen now</a>`
+          ? `<p class="owned soft">You have this one.</p><br><a class="btn buy-btn" href="library.html#${esc(item.slug)}">Listen now</a>`
           : `<button class="btn buy-btn" id="buyBtn">Buy for ${esc(item.priceText)}</button>
              <p class="buynote" id="buyNote">One payment, no password. Listen straight away.</p>`}
       </div>
@@ -47,7 +47,7 @@
 
     ${book && (book.url || book.audiobook) ? `<h2>Also available</h2>
     <div class="also buy has-main">${book.url ? `<a class="btn amazon" href="${esc(book.url)}">Find it on Amazon</a>` : ''}${book.audiobook ? `<a class="btn spotify" href="${esc(book.audiobook)}" target="_blank" rel="noopener">On Spotify</a>` : ''}</div>` : ''}
-    <p class="soft" style="margin-top:26px;font-size:.95rem">Already bought this? <a href="storytime.html">Open your stories</a>.</p>
+    <p class="soft" style="margin-top:26px;font-size:.95rem">Already bought this? <a href="library.html">Open your stories</a>.</p>
   `;
 
   /* free sample (a public file) */
