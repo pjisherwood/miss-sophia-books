@@ -23,10 +23,12 @@ const THOUGHTS = [
 /* ---- New on the shelf: ONE item, change it whenever there's something new ---- */
 const NEW_ON_SHELF = {
   icon: "🎧",
-  title: "The Wisdom of Aloharin audiobook",
-  text: "Listen to a few quiet minutes, narrated by Miss Sophia.",
-  url: "storytime.html#the-wisdom-of-aloharin"
+  title: "A Christmas Dream, the audiobook",
+  text: "Read by Miss Sophia. Hear a free sample first.",
+  url: "audiobook/a-christmas-dream"
 };
+/* Before 20 Nov 2026 this pointed at The Wisdom of Aloharin audiobook:
+   { icon:"🎧", title:"The Wisdom of Aloharin audiobook", text:"Listen to a few quiet minutes, narrated by Miss Sophia.", url:"storytime.html#the-wisdom-of-aloharin" } */
 
 /* ---- A little gift from Miss Sophia: ONE item at a time ---- */
 const GIFT = {

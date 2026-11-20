@@ -35,6 +35,15 @@
 <script src="content.js"></script>
 <script src="site.js"></script>
 <script>
+  const HEAD = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="3" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/></svg>';
+  /* A book with an audiobook on this site gets a main button first (hear a free sample, then buy), then Amazon, then Spotify, the last two smaller. */
+  function buyRow(b){
+    const paid = (typeof AUDIOBOOKS !== 'undefined') && AUDIOBOOKS.find(a => a.bookSlug === b.slug && a.access === 'paid');
+    if(paid) return `<div class="buy has-main">
+        <div class="mainrow"><a class="btn main" href="/audiobook/${paid.slug}"><span class="m1">${HEAD}Audiobook · ${esc(paid.priceText)}</span><span class="m2">Hear a free sample first</span></a></div>
+        <a class="btn small" href="${b.url}">The book on Amazon</a>${b.audiobook?`<a class="btn small spotify" href="${b.audiobook}" target="_blank" rel="noopener">${HEAD}Audiobook on Spotify</a>`:''}</div>`;
+    return `<div class="buy"><a class="btn" href="${b.url}">Find it on Amazon</a>${b.audiobook?`<a class="btn spotify" href="${b.audiobook}" target="_blank" rel="noopener">${HEAD}Audiobook on Spotify</a>`:''}</div>`;
+  }
   const ALL_BOOKS = BOOKS.concat(EARLIER_BOOKS.map(x => Object.assign({ earlier:true, inside:[] }, x)));
   $('#list').innerHTML = ALL_BOOKS.map(b => `<article class="book-row" id="${b.slug}">
     <div class="cover" style="background-image:url('${b.image}');background-size:cover"></div>
@@ -48,7 +57,7 @@
         ${b.inside.length?`<p class="inside-h">What’s inside</p><ul>${b.inside.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:''}
         ${b.note?`<p class="soft">${esc(b.note)} <a href="#most-important-hour">See it above.</a></p>`:''}
       </details>
-      <div class="buy"><a class="btn" href="${b.url}">Find it on Amazon</a>${b.audiobook?`<a class="btn spotify" href="${b.audiobook}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="3" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4.5" height="7" rx="1.6" fill="currentColor"/></svg>Audiobook on Spotify</a>`:''}</div>
+      ${buyRow(b)}
     </div></article>`).join('');
   $('#free').innerHTML = WISDOM.filter(w => w.cover).map(w => `<div class="book-row">
     <div class="cover" style="background-image:url('${w.cover}');background-size:cover"></div>

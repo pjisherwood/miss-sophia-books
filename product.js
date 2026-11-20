@@ -46,7 +46,7 @@
     ${desc.map(p => `<p>${esc(p)}</p>`).join('')}
 
     ${book && (book.url || book.audiobook) ? `<h2>Also available</h2>
-    <div class="also buy">${book.url ? `<a class="btn ghost" href="${esc(book.url)}">The book on Amazon</a>` : ''}${book.audiobook ? `<a class="btn spotify" href="${esc(book.audiobook)}" target="_blank" rel="noopener">Audiobook on Spotify</a>` : ''}</div>` : ''}
+    <div class="also buy">${book.url ? `<a class="btn small" href="${esc(book.url)}">The book on Amazon</a>` : ''}${book.audiobook ? `<a class="btn small spotify" href="${esc(book.audiobook)}" target="_blank" rel="noopener">Audiobook on Spotify</a>` : ''}</div>` : ''}
     <p class="soft" style="margin-top:26px;font-size:.95rem">Already bought this? <a href="storytime.html">Open your stories</a>.</p>
   `;
 

@@ -55,6 +55,17 @@ h2.title,h1.title{font-family:'EB Garamond',serif;font-weight:400;color:var(--na
 .buy{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn.spotify{background:#17833b;color:#fff;display:inline-flex;align-items:center;gap:8px}
 .btn.spotify:hover{background:#1c9a46}
+/* a book with an audiobook sold here: main button first, Amazon and Spotify smaller and equal */
+.buy.has-main{flex-wrap:wrap;gap:10px 8px}
+.buy.has-main .mainrow{flex:1 1 100%}
+.btn.main{max-width:340px;display:flex;flex-direction:column;gap:2px;padding:11px 22px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.14)}
+.btn.main .m1{display:inline-flex;align-items:center;gap:8px;font-size:1.1rem;font-weight:700}
+.btn.main .m2{font-size:.85rem;font-weight:500;opacity:.95;padding-left:26px}
+.btn.main:hover{filter:brightness(1.06)}
+.btn.small{font-size:.9rem;padding:6px 14px;background:none;border:2px solid var(--purple);color:var(--purple);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn.small.spotify{border-color:#17833b;color:#17833b;background:none}
+.btn.small.spotify:hover{background:#eaf6ee}
+.btn.small svg{width:16px;height:16px}
 @media(max-width:520px){.buy{gap:8px;flex-wrap:nowrap}.buy .btn{font-size:.85rem;padding:8px 10px;white-space:nowrap}.btn.spotify{gap:6px}.btn.spotify svg{width:16px;height:16px}}
 
 /* library */
@@ -161,4 +172,5 @@ h2.title,h1.title{font-family:'EB Garamond',serif;font-weight:400;color:var(--na
 .piece-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
 .piece-actions .lis{margin:6px 0 2px;text-decoration:none}
 .piece-actions .more{margin:6px 0 2px}
+@media(max-width:520px){.buy.has-main{flex-wrap:wrap}.buy.has-main .btn.small{font-size:.85rem;padding:6px 10px}}
 @media(max-width:340px){.buy{flex-wrap:wrap}}
