@@ -171,3 +171,16 @@ h2.title,h1.title{font-family:'EB Garamond',serif;font-weight:400;color:var(--na
 .piece-actions .lis{margin:6px 0 2px;text-decoration:none}
 .piece-actions .more{margin:6px 0 2px}
 @media(max-width:340px){.buy{flex-wrap:wrap}}
+
+/* stories & wisdom: photo beside the writing on wider screens (iPad, landscape, laptop) so pictures are not cropped to a letterbox */
+.piece-pic{display:block}
+.reading .rhead{margin-top:14px}
+@media(min-width:700px){
+  main.wrap:has(.piece), main.wrap:has(.rhead){max-width:960px}
+  .piece{display:grid;grid-template-columns:5fr 6fr;gap:28px;align-items:center;margin:0 0 38px}
+  .piece .pic{height:auto;aspect-ratio:4/3;margin:0}
+  .reading .rhead{display:grid;grid-template-columns:5fr 6fr;gap:32px;align-items:center;margin:14px 0 26px}
+  .reading .rhead .pic{height:auto;aspect-ratio:4/3;margin:0}
+  .reading .rtext .title{margin-top:0}
+  .reading > p,.reading > h3.q,.reading > .actions{max-width:720px}
+}

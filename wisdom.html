@@ -46,11 +46,12 @@
       <p class="soft">Short pieces to read slowly, one at a time.</p>
       <div class="chips">${KINDS.map(k=>`<button class="chip" data-k="${esc(k)}" aria-pressed="${k===kind}">${esc(k)}</button>`).join('')}</div>
       ${items.map(w => `<div class="piece">
+        <a class="piece-pic" href="${pieceHref(w.slug)}" tabindex="-1" aria-hidden="true"><div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'}"></div></a>
+        <div class="piece-text">
         <a class="piece-link" href="${pieceHref(w.slug)}">
-          <div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'}"></div>
           <h2 class="eyebrow">${esc(w.kind)}</h2><h3>${esc(w.title)}</h3>
           ${w.date?`<div class="date">${esc(w.date)}</div>`:''}<p>${esc(w.summary)}</p></a>
-        <div class="piece-actions">${listenLink(w)}<a class="more" href="${pieceHref(w.slug)}">Read more →</a></div></div>`).join('')}`;
+        <div class="piece-actions">${listenLink(w)}<a class="more" href="${pieceHref(w.slug)}">Read more →</a></div></div></div>`).join('')}`;
     view.querySelectorAll('.chip').forEach(c => c.onclick = () => { kind = c.dataset.k; renderList(); });
   }
 
@@ -65,12 +66,14 @@
     document.title = w.title + ' – Miss Sophia Books';
     view.innerHTML = `<article class="reading">
       <a href="wisdom.html" onclick="history.replaceState(null,'',location.pathname);">← All stories &amp; wisdom</a>
-      <div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'};margin-top:14px"></div>
+      <div class="rhead"><div class="pic" style="background-image:${picBg(w)};background-position:${w.focus||'center'}"></div>
+      <div class="rtext">
       ${w.cover?`<img src="${w.cover}" alt="Cover of ${esc(w.title)}" style="width:150px;border-radius:3px 6px 6px 3px;box-shadow:4px 6px 12px rgba(0,0,0,.25);margin:0 0 14px">`:''}
       <h2 class="eyebrow">${esc(w.kind)}</h2>
       <h1 class="title">${esc(w.title)}</h1>
       ${w.date?`<div class="soft">${esc(w.date)}</div>`:''}
       ${w.audio?`<a class="listenbtn ${listenInfo(w).cls}" href="library.html#${w.slug}">${listenInfo(w).cls==='done'?'':PLAY}${esc(listenInfo(w).label)}</a><p class="soft" style="font-size:.9rem;margin:6px 0 14px">Read aloud by Miss Sophia (an AI voice). Opens the story player.</p>`:''}
+      </div></div>
       ${w.body.map(p=>p.startsWith('## ')?`<h3 class="q">${esc(p.slice(3))}</h3>`:`<p>${esc(p)}</p>`).join('')}
       <div class="actions">${w.download?`<a class="btn" href="${w.download}">${esc(w.downloadText||'Download')}</a>`:''}<button class="btn ghost" id="share" style="font:inherit;font-weight:600;cursor:pointer">Share this with someone</button><span class="toast" id="toast"></span></div>
       <h2 class="eyebrow" style="margin-top:34px">You might also like</h2>
