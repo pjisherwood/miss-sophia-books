@@ -145,28 +145,30 @@ export function verifyStripeSignature(raw, header, secret, toleranceSeconds = 30
 
 const h = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// The access email: one private link that opens the buyer's library on any phone. No password.
-export function accessEmail({ link, titles, findUrl }) {
-  const list = titles.length ? titles : ['your stories'];
-  const what = list.join(' and ');
-  const subject = 'Your stories from Miss Sophia Books';
+// The access email: one personal link that opens the buyer's library on any phone. No password.
+// It also confirms what the buyer agreed at checkout (instant access, and that the 14-day cancellation right ends once they start listening): UK law asks for that confirmation.
+export function accessEmail({ link, titles, findUrl, siteUrl = 'https://misssophiabooks.com' }) {
+  const what = titles.length ? titles.join(' and ') : 'your stories';
+  const subject = 'Your stories are ready';
+  const agreed = 'You asked for your audiobook to start straight away, and understood that the 14-day cancellation right ends once you begin listening. If anything is not quite right, just reply to this email and Paul will be glad to help.';
   const text = [
     'Hello,', '',
-    'Thank you for buying ' + what + '.', '',
-    'Here is your private link. Open it on your phone and your stories are waiting for you, with no password:', '',
+    'Thank you for choosing ' + what + '. I am so glad it has found its way to you.', '',
+    'This is your own personal link. Open it on your phone and your stories are waiting, with no password:', '',
     link, '',
-    'Please keep this email: it is how you get back to your stories on any phone. Anyone with the link can listen, so please do not share it.', '',
-    'If you ever lose it, you can ask for a new link here: ' + findUrl, '',
-    'If anything is not right, just reply to this email.', '',
+    'Keep this email somewhere safe. If you ever change phone, "Find my stories" will send you a fresh link: ' + findUrl, '',
+    'If a friend might enjoy it too, they are always welcome to find their own copy at ' + siteUrl.replace(/^https?:\/\//, '') + '.', '',
+    agreed, '',
     'With warm wishes,', 'Miss Sophia Books',
   ].join('\n');
   const html = `<div style="font-family:Georgia,serif;font-size:17px;line-height:1.55;color:#223;max-width:34em">
 <p>Hello,</p>
-<p>Thank you for buying <b>${h(what)}</b>.</p>
-<p>Here is your private link. Open it on your phone and your stories are waiting for you, with no password:</p>
+<p>Thank you for choosing <b>${h(what)}</b>. I am so glad it has found its way to you.</p>
+<p>This is your own personal link. Open it on your phone and your stories are waiting, with no password:</p>
 <p><a href="${h(link)}" style="display:inline-block;background:#6b5ca5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:24px">Open my stories</a></p>
-<p style="font-size:15px;color:#556">Please keep this email: it is how you get back to your stories on any phone. Anyone with the link can listen, so please do not share it.</p>
-<p style="font-size:15px;color:#556">If you ever lose it, you can <a href="${h(findUrl)}">ask for a new link here</a>. If anything is not right, just reply to this email.</p>
+<p>Keep this email somewhere safe. If you ever change phone, <a href="${h(findUrl)}">“Find my stories”</a> will send you a fresh link.</p>
+<p>If a friend might enjoy it too, they are always welcome to find their own copy at <a href="${h(siteUrl)}">${h(siteUrl.replace(/^https?:\/\//, ''))}</a>.</p>
+<p style="font-size:15px;color:#556">${h(agreed)}</p>
 <p>With warm wishes,<br>Miss Sophia Books</p></div>`;
   return { subject, text, html };
 }

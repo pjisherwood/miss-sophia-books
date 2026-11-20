@@ -609,6 +609,6 @@ const teaser = t => String(t).replace(/[.…\s]+$/, '') + '...';
    (immediate access, and losing the 14-day cancellation right once listening starts). Check it against the official GOV.UK / Trading Standards guidance.
    The "marketing" wording is yours exactly as given; its box is always UNTICKED to start with. */
 const CHECKOUT_WORDING = {
-  digital:"DRAFT, TO CHECK: I agree that my access starts straight away, and that I lose my right to cancel within 14 days once I start listening.",
+  digital:"Start my access now. I understand I can't cancel once I start listening.",
   marketing:"Occasionally send me news of new stories"
 };

@@ -38,7 +38,8 @@
         ${owned
           ? `<p class="owned soft">You have this one.</p><br><a class="btn buy-btn" href="storytime.html#${esc(item.slug)}">Listen now</a>`
           : `<button class="btn buy-btn" id="buyBtn">Buy for ${esc(item.priceText)}</button>
-             <p class="buynote" id="buyNote">One payment, no password. Listen on your phone straight away.</p>`}
+             <p class="buynote" id="buyNote">One payment, no password. Listen on your phone straight away.</p>
+             <p class="buynote">Already bought this? <a href="find-stories.html">Find my stories</a></p>`}
       </div>
     </div>
 

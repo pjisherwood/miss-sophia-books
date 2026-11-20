@@ -21,7 +21,7 @@ export default async (req) => {
 
   try {
     let title = '';
-    try { const p = findProduct(loadContent(), s.metadata.product_id); if (p) title = p.title + (p.kind === 'Audiobook' ? ' (audiobook)' : ''); } catch (e) { console.error('stripe-webhook content:', e.message); }
+    try { const p = findProduct(loadContent(), s.metadata.product_id); if (p) title = p.title; } catch (e) { console.error('stripe-webhook content:', e.message); }
     const base = SITE_URL();
     const msg = accessEmail({ link: base + '/mystories.html?t=' + signToken([s.id]), titles: title ? [title] : [], findUrl: base + '/find-stories.html' });
     await sendEmail({ to: email, ...msg, idempotencyKey: 'access-' + s.id });
