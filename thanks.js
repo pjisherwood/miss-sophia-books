@@ -16,7 +16,7 @@
         const item = AUDIOBOOKS.find(a => a.slug === d.slug);
         show(`<h1 class="title">Thank you</h1>
           <p style="font-size:1.15rem">Your payment went through${item ? ' for <b>' + esc(item.title) + '</b>' : ''}.</p>
-          <p>${d.email ? 'We are emailing your private link to <b>' + esc(d.email) + '</b>. ' : ''}Keep that email: it is how you get back to your stories on any phone, with no password.</p>
+          <p>${d.email ? 'We are emailing your private link to <b>' + esc(d.email) + '</b>. ' : ''}Keep that email: it is how you get back to your stories on any device, with no password.</p>
           <p><a class="btn buy-btn" id="open" href="storytime.html#${esc(d.slug || '')}">Open my stories</a></p>
           <p class="soft" style="font-size:.95rem">Lost the email? <a href=\"find-stories.html\">Restore purchases</a> sends you a new link.</p>`);
         return;
