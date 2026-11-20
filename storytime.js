@@ -5,19 +5,13 @@ const ITEMS = STORYTIME.concat(WISDOM.filter(w => w.audio).map(w => ({ slug:w.sl
 /* audiobooks (chapter mode). They are paid: a book only opens for someone who owns it (see access.js); everyone else is sent to its product page. */
 const BOOKITEMS = AUDIOBOOKS.map(b => ({ slug:b.slug, title:b.title, summary:bookChapterCount(b) + ' chapters', chapter:'Audiobook · by ' + b.by, cover:b.cover, thumb:b.cover, chapters:b.chapters, duration:bookSeconds(b), theme:b.theme, credit:(b.narration || '') + (b.narration && b.narrationNote ? ' (' + b.narrationNote + ')' : ''), by:b.by, access:b.access, productId:b.productId }));
 const ALL = ITEMS.concat(BOOKITEMS);
-  /* Colour looks for Story time. Try one on your phone by adding ?look=midnight (or ocean, ink) to the address; ?look=0 goes back.
-     (A look replaces the cover-based brown/red background. Once one is chosen it becomes the standard.) */
-  const LOOKS = {
-    midnight:{ bg1:'#14264f', bg2:'#0a1330', accent:'#7fd6d3', on:'#052b2e', text:'#eef4fb', soft:'#9fb4d3' },
-    ocean:{ bg1:'#0f4350', bg2:'#08242d', accent:'#ffc2a0', on:'#2a1306', text:'#f0f8f8', soft:'#9fc7cc' },
-    ink:{ bg1:'#1b2230', bg2:'#0d1017', accent:'#8ecbff', on:'#04223d', text:'#f3f6fa', soft:'#9ba6ba' }
-  };
-  let look = null;
-  try{ const m = location.search.match(/[?&]look=([a-z0-9]+)/); if(m){ if(LOOKS[m[1]]) localStorage.setItem('msb-look', m[1]); else localStorage.removeItem('msb-look'); }
-       look = LOOKS[localStorage.getItem('msb-look')] || null; }catch(e){}
-  function applyLook(){ if(!look) return; const r = document.documentElement.style;
-    r.setProperty('--bg1', look.bg1); r.setProperty('--bg2', look.bg2); r.setProperty('--accent', look.accent); r.setProperty('--on-accent', look.on);
-    r.setProperty('--text', look.text); r.setProperty('--soft', look.soft); const tc = document.getElementById('themeColor'); if(tc) tc.content = look.bg2; }
+  /* Story time colours: a charcoal background with a soft accent. Try the brighter accents by adding ?look=vivid to the address;
+     ?look=pastel goes back to the soft ones (pastel is the standard). The choice is remembered on the phone. */
+  let MODE = 'pastel';
+  try{ const m = location.search.match(/[?&]look=([a-z0-9]+)/); if(m){ if(m[1] === 'vivid') localStorage.setItem('msb-look', 'vivid'); else localStorage.removeItem('msb-look'); }
+       if(localStorage.getItem('msb-look') === 'vivid') MODE = 'vivid'; }catch(e){}
+  const look = null, CHAR1 = '#262a33', CHAR2 = '#121418';
+  function applyLook(){}
 
 (function(){
   const small = () => window.matchMedia('(max-width:800px)').matches;
@@ -86,19 +80,20 @@ const ALL = ITEMS.concat(BOOKITEMS);
   function applyTheme(bg, accent){
     const dk = (c,f) => c.map(v => v*f);
     const r = document.documentElement.style;
-    r.setProperty('--bg1', hex(dk(bg,0.85))); r.setProperty('--bg2', hex(dk(bg,0.42)));
+    r.setProperty('--bg1', CHAR1); r.setProperty('--bg2', CHAR2);
     r.setProperty('--accent', hex(accent));
     const lum = (0.299*accent[0] + 0.587*accent[1] + 0.114*accent[2]) / 255;
     r.setProperty('--on-accent', lum > 0.55 ? '#14100a' : '#ffffff');
-    $('#themeColor').content = hex(dk(bg,0.6));
+    $('#themeColor').content = CHAR2;
   }
   const parse = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
   /* soft pastel accents for the play button, the frame and the seek bar. In a story's theme write accent:"mint" (or any name below);
      if no accent is given, the pastel nearest to the strongest colour in the picture is used. A #hex colour still works too. */
-  const PASTELS = { blue:'#a9cde6', mint:'#a8dcc2', teal:'#9ed6d1', pink:'#f0b9cd', peach:'#f6c6a3', yellow:'#f4e3a1', lavender:'#cdbfe9', grey:'#e4dfd5' };
+  const PASTELS = MODE === 'vivid' ? { blue:'#5aa9ff', mint:'#3fd6a5', teal:'#2ccfc8', pink:'#ff6fa5', peach:'#ff9b63', yellow:'#ffd04a', lavender:'#a98bff', grey:'#e4e7ec' }
+    : { blue:'#a9cde6', mint:'#a8dcc2', teal:'#9ed6d1', pink:'#f0b9cd', peach:'#f6c6a3', yellow:'#f4e3a1', lavender:'#cdbfe9', grey:'#e4e7ec' };
   const hueOf = c => { const [r,g,b] = c, mx = Math.max(r,g,b), mn = Math.min(r,g,b), d = mx - mn; if(!d) return 0;
     const h = mx === r ? ((g-b)/d + 6) % 6 : mx === g ? (b-r)/d + 2 : (r-g)/d + 4; return h * 60; };
-  const resolveAccent = v => PASTELS[v] ? parse(PASTELS[v]) : (/^#[0-9a-f]{6}$/i.test(v) ? parse(v) : parse(PASTELS.peach));
+  const resolveAccent = v => PASTELS[v] ? parse(PASTELS[v]) : (/^#[0-9a-f]{6}$/i.test(v) ? parse(v) : parse(PASTELS.mint));
   function nearestPastel(c){
     const mx = Math.max(...c), mn = Math.min(...c); if(mx === 0 || (mx - mn) / mx < 0.15) return parse(PASTELS.grey);
     const h = hueOf(c); let best = 'peach', bd = 999;
@@ -107,7 +102,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
   }
   function themeFromStory(s){
     if(look){ applyLook(); return; }
-    const t = Object.assign({bg:'#14110e', accent:'peach'}, s.theme || {}); applyTheme(parse(t.bg), resolveAccent(t.accent));
+    const t = Object.assign({bg:'#262a33', accent:'mint'}, s.theme || {}); applyTheme(parse(t.bg), resolveAccent(t.accent));
     if(!s.cover) return;
     const img = new Image(); img.onload = () => { try{
       const c = document.createElement('canvas'); c.width = c.height = 48; const x = c.getContext('2d'); x.drawImage(img,0,0,48,48);
@@ -210,7 +205,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     audio.pause(); story = null; loadToken++; setBookMode(false); renderYours(); cardStatus();
     $('#player').hidden = true; $('#browse').hidden = false; $('#sheet').hidden = true; $('#shareBtn').hidden = true;
     const r = document.documentElement.style; ['--bg1','--bg2','--accent','--on-accent'].forEach(v => r.removeProperty(v)); applyLook();
-    $('#themeColor').content = look ? look.bg2 : '#14110e'; document.title = 'Story time – Miss Sophia Books';
+    $('#themeColor').content = CHAR2; document.title = 'Story time – Miss Sophia Books';
   }
   function open(slug){
     story = ALL.find(s => s.slug === slug); if(!story) return showBrowse();
