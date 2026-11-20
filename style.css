@@ -187,3 +187,33 @@ h2.title,h1.title{font-family:'EB Garamond',serif;font-weight:400;color:var(--na
   .reading .rtext .title{margin-top:0}
   .reading > p,.reading > h3.q,.reading > .actions{max-width:720px}
 }
+
+/* ---- home page, 20 Nov 2026: free listens first, audiobooks second ---- */
+.hero-btn{display:inline-block;margin-top:6px;padding:12px 30px;border-radius:30px;background:var(--purple);color:var(--cream);font:600 1.05rem 'Lora',serif;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.hero-btn:hover,.hero-btn:focus{filter:brightness(1.15)}
+.tag{display:inline-block;font:600 .78rem 'Lora',serif;letter-spacing:.03em;line-height:1.5;padding:0 10px;border-radius:999px;background:#e0f3e9;color:#1d6b4a;vertical-align:middle}
+.tag.price{background:#f8e2e4;color:#8a1520}
+.tag.soon{background:#eeeef3;color:var(--soft)}
+.free-list{display:grid;gap:12px;margin:12px 0 4px}
+.free-card{display:flex;gap:14px;align-items:center;padding:10px 12px 10px 10px;background:#fff;border:1.5px solid var(--teal-line);border-radius:14px;text-decoration:none;color:var(--ink)}
+.free-card .pic{flex:0 0 74px;height:74px;border-radius:9px;background-size:cover;background-position:center}
+.free-card .txt{flex:1;min-width:0}
+.free-card b{display:block;font-family:'EB Garamond',serif;font-size:1.3rem;font-weight:500;line-height:1.2;color:var(--navy)}
+.free-card .meta{display:block;font-size:.9rem;color:var(--soft);margin-top:2px}
+.playbtn{flex:0 0 46px;width:46px;height:46px;border-radius:50%;background:var(--purple);display:grid;place-items:center}
+.playbtn svg,.sample-btn svg{width:18px;height:18px;fill:#fff;flex:none}
+.playbtn svg{margin-left:3px}
+.ab-card{display:flex;gap:16px;align-items:flex-start;padding:16px;background:#f5e6fd;border-radius:14px;text-decoration:none;color:var(--ink);margin:12px 0}
+.ab-card .cover{flex:0 0 96px;width:96px;aspect-ratio:2/3;border-radius:3px 6px 6px 3px;box-shadow:4px 6px 12px rgba(0,0,0,.25);background-size:cover;background-position:center}
+.ab-card .txt{flex:1;min-width:0}
+.ab-card b{display:block;font-family:'EB Garamond',serif;font-size:1.45rem;font-weight:500;line-height:1.2;color:var(--navy)}
+.ab-card .meta{display:block;font-size:.9rem;color:var(--soft);margin-top:3px}
+.sample-btn{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:9px 18px;border-radius:10px;background:var(--bookcolor,#a30a14);color:#fff;font:600 .95rem 'Lora',serif}
+.sample-btn svg{width:16px;height:16px}
+.ab-soon{display:grid;gap:10px;margin:8px 0 4px}
+.ab-small{display:flex;gap:12px;align-items:center;padding:8px 10px;border:1.5px solid var(--teal-line);border-radius:12px;background:#fff;text-decoration:none;color:var(--ink)}
+.ab-small .cover{flex:0 0 38px;width:38px;aspect-ratio:2/3;border-radius:2px 4px 4px 2px;box-shadow:2px 3px 6px rgba(0,0,0,.22);background-size:cover;background-position:center}
+.ab-small b{display:block;font-family:'EB Garamond',serif;font-size:1.15rem;font-weight:500;line-height:1.2;color:var(--navy)}
+.chat-card{display:block;padding:16px 20px;border:2px dashed var(--teal-line);border-radius:12px;background:#fff;text-decoration:none;color:var(--ink);text-align:center}
+.chat-card b{display:block;font-family:'EB Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--navy)}
+.chat-card span{color:var(--soft);font-size:.95rem}

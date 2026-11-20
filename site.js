@@ -28,9 +28,9 @@ const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Books","
 (function(){
   /* A page can set window.CHAT_CUSTOM = true before site.js loads to add its own chat widget (see voice-test.html). */
   if (window.CHAT_CUSTOM) return;
-  /* The chat button appears only on the home page and on the Ask Miss Sophia page (reached from the menu). */
+  /* The chat button appears only on the Ask Miss Sophia page (reached from the menu and from a small card on the home page). */
   const chatName = (location.pathname.split('/').pop() || 'index').replace(/\.html$/, '');
-  if (!['index','ask'].includes(chatName)) return;
+  if (!['ask'].includes(chatName)) return;
   if (typeof CHAT_AGENT_ID !== 'undefined' && CHAT_AGENT_ID) {
     const el = document.createElement('elevenlabs-convai');
     el.setAttribute('agent-id', CHAT_AGENT_ID);
@@ -61,7 +61,7 @@ const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Books","
     if(save){ try{ localStorage.setItem('shopTheme', t.id) }catch(e){} }
   }
   /* the button lives inside the picture (bottom left); the panel slides up from the bottom of the screen */
-  shop.insertAdjacentHTML('beforeend', `<button id="pickBtn">📚 Change your bookshop</button>`);
+  shop.insertAdjacentHTML('beforeend', `<button id="pickBtn">📚 Choose your bookshop</button>`);
   document.body.insertAdjacentHTML('beforeend',
     `<div id="panel" role="dialog" aria-label="Choose your bookshop">
        <button class="close" aria-label="Close">×</button>

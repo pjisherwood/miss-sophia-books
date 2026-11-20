@@ -14,9 +14,16 @@
 <section class="shop" id="shop">
   <h1>Welcome to Miss Sophia’s bookshop</h1>
   <p>A quiet place for heartfelt stories, gentle wisdom, and a little light in a noisy world.</p>
+  <a class="hero-btn" id="heroListen" href="library.html">Listen to a free story</a>
 </section>
 
 <main class="wrap">
+
+  <section class="block" id="free-to-listen">
+    <h2 class="eyebrow">Free to listen</h2>
+    <div class="free-list" id="freeList"></div>
+    <a class="more" href="wisdom.html">All stories &amp; wisdom →</a>
+  </section>
 
   <section class="block">
     <h2 class="eyebrow">A thought for today</h2>
@@ -25,14 +32,16 @@
   </section>
 
   <section class="block">
-    <h2 class="eyebrow">New on the shelf</h2>
-    <a class="shelf-item" id="newItem"></a>
+    <h2 class="eyebrow">Audiobooks</h2>
+    <div id="audiobooks"></div>
+    <a class="more" href="books.html">All the books →</a>
   </section>
 
   <section class="block">
-    <h2 class="eyebrow">The books</h2>
-    <div class="books" id="books"></div>
-    <a class="more" href="books.html">About the books →</a>
+    <a class="chat-card" href="ask.html">
+      <b>Have a word with Miss Sophia</b>
+      <span>Ask a question, or simply say hello.</span>
+    </a>
   </section>
 
   <section class="block">
@@ -64,13 +73,32 @@
   $('#thought').textContent = '“' + t.text + '”';
   $('#thoughtMore').href = pieceHref(t.from);
 
-  const n = $('#newItem');
-  n.href = NEW_ON_SHELF.url;
-  n.innerHTML = `<span class="ic">${NEW_ON_SHELF.icon}</span><span><b>${esc(NEW_ON_SHELF.title)}</b>${esc(NEW_ON_SHELF.text)}</span>`;
+  const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 
-  const ALL_BOOKS = BOOKS.concat(EARLIER_BOOKS.map(b => Object.assign({ earlier:true }, b)));
-  $('#books').innerHTML = ALL_BOOKS.map(b =>
-    `<a class="book" href="books.html#${b.slug}"><div class="cover" style="background-image:url('${b.image}')"></div>${esc(b.title)}${b.earlier?`<small class="era">An earlier book<br>${esc(b.tagline)}</small>`:''}</a>`).join('');
+  // Free to listen: the pieces named in FREE_HOME (content.js)
+  const freePieces = FREE_HOME.map(slug => WISDOM.find(w => w.slug === slug)).filter(w => w && w.audio && w.access !== 'paid');
+  $('#freeList').innerHTML = freePieces.map(w =>
+    `<a class="free-card" href="library.html#${w.slug}">
+       <span class="pic" style="background-image:url('${w.thumb || w.image}')"></span>
+       <span class="txt"><b>${esc(w.title)}</b><span class="meta">About ${Math.max(1, Math.round(w.duration/60))} min · <span class="tag">Free</span></span></span>
+       <span class="playbtn" aria-label="Play">${PLAY}</span>
+     </a>`).join('');
+  if (freePieces.length) $('#heroListen').href = 'library.html#' + freePieces[0].slug;
+
+  // Audiobooks: books with an AUDIOBOOKS entry are on sale (full card); the rest say "coming soon"
+  const onSale = [], soon = [];
+  BOOKS.forEach(b => { const a = AUDIOBOOKS.find(x => x.bookSlug === b.slug); (a ? onSale : soon).push({ b, a }); });
+  $('#audiobooks').innerHTML =
+    onSale.map(({b,a}) =>
+      `<a class="ab-card" href="audiobook/${a.slug}" style="--bookcolor:${a.buttonColor || '#a30a14'}">
+         <span class="cover" style="background-image:url('${a.cover || b.image}')"></span>
+         <span class="txt"><b>${esc(a.title)}</b>
+           <span class="meta">${esc(a.narration || '')}${a.narrationNote ? ' (' + esc(a.narrationNote) + ')' : ''}</span>
+           <span class="meta"><span class="tag price">${esc(a.priceText)}</span></span>
+           <span class="sample-btn">${PLAY}Hear a free sample</span></span>
+       </a>`).join('') +
+    (soon.length ? `<div class="ab-soon">${soon.map(({b}) =>
+      `<a class="ab-small" href="books.html#${b.slug}"><span class="cover" style="background-image:url('${b.image}')"></span><span class="txt"><b>${esc(b.title)}</b><span class="tag soon">Audiobook coming soon</span></span></a>`).join('')}</div>` : '');
 
 </script>
 </body>

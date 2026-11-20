@@ -30,6 +30,12 @@ const NEW_ON_SHELF = {
 /* Before 20 Nov 2026 this pointed at The Wisdom of Aloharin audiobook:
    { icon:"🎧", title:"The Wisdom of Aloharin audiobook", text:"Listen to a few quiet minutes, narrated by Miss Sophia.", url:"library.html#the-wisdom-of-aloharin" } */
 
+/* ---- Home page: "Free to listen" (three free stories, in this order; each must have audio in WISDOM below) ---- */
+const FREE_HOME = ["the-day-you-find-out-why", "the-unseen-goal", "the-magic-in-everything"];
+
+/* The home page "Audiobooks" section follows AUDIOBOOKS (near the bottom of this file): any book with an entry there shows as a full card with its price
+   and "Hear a free sample"; the other books in BOOKS show as "Audiobook coming soon". NEW_ON_SHELF above is no longer shown on the home page. */
+
 /* ---- A little gift from Miss Sophia: ONE item at a time ---- */
 const GIFT = {
   title: "A little gift from Miss Sophia",

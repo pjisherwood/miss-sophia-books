@@ -6,7 +6,8 @@ PUT IT ON NETLIFY
 
 THE ONE FILE YOU EDIT: content.js
 - Thought for today ........ THOUGHTS list (changes daily by itself; each links to its piece)
-- New on the shelf ......... NEW_ON_SHELF (one item; swap it when there's news)
+- Home: Free to listen ..... FREE_HOME (three slugs from WISDOM that have audio)
+- Home: Audiobooks ......... follows AUDIOBOOKS automatically (on sale = full card with price and free sample; other books = "coming soon"). NEW_ON_SHELF is no longer shown.
 - Gift ..................... GIFT
 - Stories and wisdom ....... WISDOM (copy a block, change the words; kind is Stories or Wisdom;
                               put its picture in the pieces folder; related = what to suggest at the end)
