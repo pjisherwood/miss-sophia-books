@@ -15,8 +15,7 @@ const NAV = [["Home","index.html"],["Stories & Wisdom","wisdom.html"],["Books","
   const here = location.pathname.startsWith('/wisdom/') ? 'wisdom.html' : file;
   const h = $('#site-header');
   if(h) h.innerHTML = `<div class="site-header"><div class="in">
-    <a class="logo" href="index.html" aria-label="Miss Sophia Books home">${lamp}</a>
-    <a class="site-title" href="index.html">Miss Sophia’s Books, Stories &amp; Wisdom</a>
+    <a class="brand" href="index.html" aria-label="Miss Sophia Books home"><span class="logo">${lamp}</span><span class="site-title">Miss Sophia’s Books, Stories &amp; Wisdom</span></a>
     <nav class="site-nav">${NAV.map(([n,u])=>`<a href="${u}" ${u===here?'aria-current="page"':''}>${n}</a>`).join('')}</nav>
   </div></div>`;
   const f = $('#site-footer');
