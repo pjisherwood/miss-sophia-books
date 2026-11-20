@@ -15,8 +15,7 @@ export default async (req) => {
     const cfg = r2Config(), now = new Date();
     const urls = book.chapters.map(c => presignGet({ ...cfg, key: `${slug}/${c.file}`, now, expires: 21600 }));
     // TEMPORARY while testing: ask Cloudflare for the first byte of chapter 1 and report what it says
-    let probe; try { const r = await fetch(urls[0], { headers: { range: 'bytes=0-0' } }); probe = { status: r.status, type: r.headers.get('content-type'), size: r.headers.get('content-range') }; } catch (e) { probe = { status: 'unreachable' }; }
-    return json({ urls, probe });
+    return json({ urls });
   } catch (e) {
     console.error('audio-links:', e.message);
     if (e.code === 'nor2' || e.code === 'nokey') return json({ error: 'Audio is not switched on yet.' }, 503);

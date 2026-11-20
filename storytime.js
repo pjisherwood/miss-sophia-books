@@ -172,7 +172,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     if(s0 > 5 && s0 < c.duration - 10){ seekTo(s0); } 
     bookNote(Math.max(0, s0 || 0)); setMediaSession();
     const row = document.querySelector('#chapters .chap:nth-child(' + (i+1) + ')'); if(row && row.scrollIntoView) row.scrollIntoView({ block:'nearest' });
-    if(play){ const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.' + probeText(); }); }
+    if(play){ const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.'; }); }
   }
   function stepChapter(d){
     if(!isBook()) return; const n = story.chapters.length;
@@ -238,7 +238,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
 
   function toggle(){
     if(!story || !(story.audio || story.chapters)) return;
-    if(audio.paused){ audio.playbackRate = rate; const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.' + probeText(); }); }
+    if(audio.paused){ audio.playbackRate = rate; const p = audio.play(); if(p && p.catch) p.catch(() => { $('#stNote').textContent = 'Sorry, the recording could not be played.'; }); }
     else { saveNow(); audio.pause(); }
   }
   function seekTo(sec){
@@ -266,7 +266,6 @@ const ALL = ITEMS.concat(BOOKITEMS);
     setPlayIcon(false); try{ localStorage.removeItem(key()); localStorage.setItem('stdone-' + story.slug, '1'); }catch(e){} audio.currentTime = 0; paint(0); });
   audio.addEventListener('timeupdate', () => paint(audio.currentTime));
   audio.addEventListener('loadedmetadata', () => { audio.playbackRate = rate; if(!story) return; $('#tAll').textContent = fmt(dur()); if(pendingSeek != null){ audio.currentTime = pendingSeek; pendingSeek = null; } });
-  const probeText = () => (window.msbProbe ? ' (storage: ' + window.msbProbe.status + (window.msbProbe.type ? ', ' + window.msbProbe.type : '') + ')' : ''); /* TEMPORARY while testing */
   let relinking = false;
   audio.addEventListener('error', async () => {
     if(!story || !audio.getAttribute('src')) return;
@@ -275,7 +274,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
       try{ if(await loadUrls(b) && story === b){ selectChapter(i, was); if(at > 3) seekTo(at); relinking = false; return; } }catch(e){}
       relinking = false;
     }
-    $('#stNote').textContent = 'Sorry, the recording could not be loaded.' + probeText();
+    $('#stNote').textContent = 'Sorry, the recording could not be loaded.';
   });
 
   $('#playBtn').onclick = toggle; $('#words').onclick = toggle; $('#cover').onclick = toggle;
