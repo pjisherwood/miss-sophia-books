@@ -39,9 +39,10 @@
   /* A book with an audiobook on this site gets a main button first (hear a free sample, then buy), then Amazon, then Spotify, the last two smaller. */
   function buyRow(b){
     const paid = (typeof AUDIOBOOKS !== 'undefined') && AUDIOBOOKS.find(a => a.bookSlug === b.slug && a.access === 'paid');
-    if(paid) return `<div class="buy has-main">
-        <div class="maincol"><a class="btn small main" href="/audiobook/${paid.slug}">${HEAD}Audiobook · ${esc(paid.priceText)}</a><a class="sampletext" href="/audiobook/${paid.slug}">Hear a free sample</a></div>
-        <div class="othercol"><a class="btn small" href="${b.url}">The book on Amazon</a>${b.audiobook?`<a class="btn small spotify" href="${b.audiobook}" target="_blank" rel="noopener">${HEAD}Audiobook on Spotify</a>`:''}</div></div>`;
+    if(paid) return `<div class="buy has-main"${paid.buttonColor?` style="--bookcolor:${paid.buttonColor}"`:''}>
+        <a class="btn listen" href="/audiobook/${paid.slug}">${HEAD}Listen to the audiobook</a>
+        <a class="btn amazon" href="${b.url}">Find it on Amazon</a>${b.audiobook?`<a class="btn spotify" href="${b.audiobook}" target="_blank" rel="noopener">On Spotify</a>`:''}
+        <p class="buynote">Hear a free sample first · ${esc(paid.priceText)}</p></div>`;
     return `<div class="buy"><a class="btn" href="${b.url}">Find it on Amazon</a>${b.audiobook?`<a class="btn spotify" href="${b.audiobook}" target="_blank" rel="noopener">${HEAD}Audiobook on Spotify</a>`:''}</div>`;
   }
   const ALL_BOOKS = BOOKS.concat(EARLIER_BOOKS.map(x => Object.assign({ earlier:true, inside:[] }, x)));
