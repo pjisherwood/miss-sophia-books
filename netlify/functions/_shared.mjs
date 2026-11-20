@@ -157,7 +157,6 @@ export function accessEmail({ link, titles, findUrl, siteUrl = 'https://misssoph
     'This is your own personal link. Open it wherever you like to listen, and your stories are waiting, with no password:', '',
     link, '',
     'Keep this email, and you can open your stories on any phone, tablet or computer, any time. If you ever lose it, "Restore purchases" on the website will send you a fresh link: ' + findUrl, '',
-    'If a friend might enjoy it too, they are always welcome to find their own copy at ' + siteUrl.replace(/^https?:\/\//, '') + '.', '',
     agreed, '',
     'With warm wishes,', 'Miss Sophia Books',
   ].join('\n');
@@ -167,7 +166,6 @@ export function accessEmail({ link, titles, findUrl, siteUrl = 'https://misssoph
 <p>This is your own personal link. Open it wherever you like to listen, and your stories are waiting, with no password:</p>
 <p><a href="${h(link)}" style="display:inline-block;background:#6b5ca5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:24px">Open my stories</a></p>
 <p>Keep this email, and you can open your stories on any phone, tablet or computer, any time. If you ever lose it, <a href="${h(findUrl)}">“Restore purchases”</a> on the website will send you a fresh link.</p>
-<p>If a friend might enjoy it too, they are always welcome to find their own copy at <a href="${h(siteUrl)}">${h(siteUrl.replace(/^https?:\/\//, ''))}</a>.</p>
 <p style="font-size:15px;color:#556">${h(agreed)}</p>
 <p>With warm wishes,<br>Miss Sophia Books</p></div>`;
   return { subject, text, html };
