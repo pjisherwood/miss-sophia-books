@@ -28,7 +28,7 @@ img,svg{max-width:100%}
 .welcome{max-width:1000px;margin:0 auto;padding:26px 22px 6px;display:grid;gap:18px;text-align:center}
 .welcome h1{font-family:'EB Garamond',serif;font-weight:400;color:var(--navy);font-size:1.9rem;line-height:1.2;margin:0 0 10px}
 .welcome-text>p{margin:0;color:var(--soft);font-size:1.1rem}
-.listen-label{font-family:'EB Garamond',serif;font-weight:500;color:var(--purple);font-size:1.6rem;line-height:1.2;margin:20px 0 0}
+.listen-label{display:inline-block;font-family:'EB Garamond',serif;font-weight:500;color:var(--purple);font-size:1.45rem;line-height:1.2;margin:20px 0 0;padding:9px 22px 10px;background:#ece8fa;border:1.5px solid var(--purple);border-radius:999px}
 .listen-label::after{content:" \2193"}
 .welcome .free-list{margin:0 0 4px}
 @media(min-width:700px){
@@ -36,7 +36,7 @@ img,svg{max-width:100%}
   .welcome{grid-template-columns:1fr 1.25fr;gap:44px;align-items:start;text-align:left;padding:34px 28px 10px}
   .welcome h1{font-size:clamp(2rem,3.6vw,2.7rem);margin-top:4px}
   .welcome-text>p{font-size:1.2rem}
-  .listen-label{font-size:1.75rem;margin-top:26px}
+  .listen-label{font-size:1.6rem;margin-top:26px}
   .listen-label::after{content:" \2192"}
 }
 
