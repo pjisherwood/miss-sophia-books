@@ -190,7 +190,7 @@ const ALL = ITEMS.concat(BOOKITEMS);
     themeFromStory(b);
     $('#stTitle').textContent = b.title; $('#stSub').classList.remove('big');
     document.title = b.title + ' – Library';
-    $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${c.n || ''}</span><span class="ct"><b>${esc(c.title)}</b>${c.first ? `<em>${esc(teaser(c.first))}</em>` : ''}</span><span class="cl"></span></button>`).join('');
+    $('#chapters').innerHTML = b.chapters.map((c,i) => `<button class="chap" data-i="${i}"><span class="cn">${c.n || ''}</span><span class="ct"><b>${esc(c.title)}</b></span><span class="cl"></span></button>`).join('');
     $('#playBtn').disabled = false; $('#seek').disabled = false;
     if(location.hash.slice(1) !== b.slug) history.pushState(null, '', '#' + b.slug);
     const tok = ++loadToken; const okU = await loadUrls(b); if(tok !== loadToken || story !== b || !okU) return;
