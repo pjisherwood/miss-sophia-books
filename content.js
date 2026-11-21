@@ -605,6 +605,39 @@ const AUDIOBOOKS = [ {
     { n:10, title:"A Sign of Love", first:"The sound of the doorbell rang out just as Oliver reached for the peeler.", file:"track-12.mp3", duration:467 },
     { n:11, title:"The Greatest Gift", first:"After the robin’s visit, the garden beyond the frosted glass seemed even more still and quiet, the snow glistening faintly under the soft glow spilling from the living room.", file:"track-13.mp3", duration:540 }
   ]
+},
+{
+  slug:"wisdom-of-aloharin",
+  access:"paid", price:499, priceText:"£4.99", productId:"wisdom-of-aloharin-audiobook",
+    taxCode:"txcd_10301000", // Stripe product tax category "Audiobook" (same as A Christmas Dream)
+  bookSlug:"wisdom-of-aloharin",
+  buttonColor:"#1d5f7a", /* deep blue-teal from the cover: colours the Listen button on the Books page */
+  title:"The Wisdom of Aloharin",
+  kind:"Audiobook",
+  by:"Paul Isherwood",
+  narration:"Read by Miss Sophia", narrationNote:"AI voice",
+  cover:"covers/wisdom-of-aloharin.jpg",
+  theme:{bg:"#0b2036",accent:"mint"},
+  sample:{ audio:"audio/wisdom-of-aloharin-sample.mp3", duration:253 },
+  chapters:[
+    { n:null, title:"Titles & Credits", first:"", file:"01-titles-and-credits.mp3", duration:8 },
+    { n:1, title:"The Doorway", first:"", file:"02-chapter-01-the-doorway.mp3", duration:541 },
+    { n:2, title:"The Elders of Aloharin", first:"", file:"03-chapter-02-the-elders-of-aloharin.mp3", duration:567 },
+    { n:3, title:"The Prophet of Aloharin", first:"", file:"04-chapter-03-the-prophet-of-aloharin.mp3", duration:603 },
+    { n:4, title:"What Is the Purpose of Life", first:"", file:"05-chapter-04-what-is-the-purpose-of-life.mp3", duration:273 },
+    { n:5, title:"Who Am I Meant to Become", first:"", file:"06-chapter-05-who-am-i-meant-to-become.mp3", duration:120 },
+    { n:6, title:"Does Money Bring Happiness", first:"", file:"07-chapter-06-does-money-bring-happiness.mp3", duration:189 },
+    { n:7, title:"What is Success", first:"", file:"08-chapter-07-what-is-success.mp3", duration:138 },
+    { n:8, title:"Is Joy Really in the Journey", first:"", file:"09-chapter-08-is-joy-really-in-the-journey.mp3", duration:148 },
+    { n:9, title:"Where Do I Belong", first:"", file:"10-chapter-09-where-do-i-belong.mp3", duration:202 },
+    { n:10, title:"What Is Love", first:"", file:"11-chapter-10-what-is-love.mp3", duration:233 },
+    { n:11, title:"Healing a Broken Heart", first:"", file:"12-chapter-11-healing-a-broken-heart.mp3", duration:227 },
+    { n:12, title:"Peace of Mind", first:"", file:"13-chapter-12-peace-of-mind.mp3", duration:435 },
+    { n:13, title:"Does God Exist", first:"", file:"14-chapter-13-does-god-exist.mp3", duration:219 },
+    { n:14, title:"What Happens When We Die", first:"", file:"15-chapter-14-what-happens-when-we-die.mp3", duration:245 },
+    { n:15, title:"The Farewell", first:"", file:"16-chapter-15-the-farewell.mp3", duration:602 },
+    { n:16, title:"A New Beginning", first:"", file:"17-chapter-16-a-new-beginning.mp3", duration:503 }
+  ]
 } ];
 /* helpers used by the product page and the player */
 const bookSeconds = b => b.chapters.reduce((a,c) => a + c.duration, 0);

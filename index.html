@@ -88,7 +88,8 @@
 
   // Audiobooks: books with an AUDIOBOOKS entry are on sale (full card); the rest say "coming soon"
   const onSale = [], soon = [];
-  BOOKS.forEach(b => { const a = AUDIOBOOKS.find(x => x.bookSlug === b.slug); (a ? onSale : soon).push({ b, a }); });
+  AUDIOBOOKS.forEach(a => { const b = BOOKS.find(x => x.slug === a.bookSlug); if (b) onSale.push({ b, a }); }); // on-sale order follows AUDIOBOOKS
+  BOOKS.forEach(b => { if (!AUDIOBOOKS.some(x => x.bookSlug === b.slug)) soon.push({ b, a: null }); });
   $('#audiobooks').innerHTML =
     onSale.map(({b,a}) =>
       `<a class="ab-card" href="audiobook/${a.slug}" style="--bookcolor:${a.buttonColor || '#a30a14'}">
