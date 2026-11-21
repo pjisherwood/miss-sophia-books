@@ -638,6 +638,42 @@ const AUDIOBOOKS = [ {
     { n:15, title:"The Farewell", first:"", file:"16-chapter-15-the-farewell.mp3", duration:602 },
     { n:16, title:"A New Beginning", first:"", file:"17-chapter-16-a-new-beginning.mp3", duration:503 }
   ]
+},
+{
+  slug:"most-important-hour",
+  access:"paid", price:499, priceText:"£4.99", productId:"most-important-hour-audiobook",
+    taxCode:"txcd_10301000", // Stripe product tax category "Audiobook" (same as the other audiobooks)
+  bookSlug:"most-important-hour",
+  buttonColor:"#1c3f7a", /* the deep blue of the cover title: colours the Listen button on the Books page */
+  title:"The Most Important Hour",
+  kind:"Audiobook",
+  by:"Paul Isherwood",
+  narration:"Read by Miss Sophia", narrationNote:"AI voice",
+  cover:"covers/most-important-hour.jpg",
+  theme:{bg:"#1b2a4a",accent:"yellow"},
+  sample:{ audio:"audio/most-important-hour-sample.mp3", duration:313 },
+  chapters:[
+    { n:null, title:"Titles & Credits", first:"", file:"01-titles-and-credits.mp3", duration:10 },
+    { n:null, title:"Introduction", first:"", file:"02-introduction.mp3", duration:70 },
+    { n:1, title:"What You’re Really After", first:"", file:"03-chapter-01-what-youre-really-after.mp3", duration:247 },
+    { n:2, title:"The Power You Didn’t Know You Had", first:"", file:"04-chapter-02-the-power-you-didnt-know-you-had.mp3", duration:230 },
+    { n:3, title:"The Compass Inside You", first:"", file:"05-chapter-03-the-compass-inside-you.mp3", duration:179 },
+    { n:4, title:"What You Focus On Grows", first:"", file:"06-chapter-04-what-you-focus-on-grows.mp3", duration:297 },
+    { n:5, title:"What Success Really Is", first:"", file:"07-chapter-05-what-success-really-is.mp3", duration:232 },
+    { n:6, title:"Are You Really Here?", first:"", file:"08-chapter-06-are-you-really-here.mp3", duration:178 },
+    { n:7, title:"Let It Go", first:"", file:"09-chapter-07-let-it-go.mp3", duration:235 },
+    { n:8, title:"A Life Like No Other", first:"", file:"10-chapter-08-a-life-like-no-other.mp3", duration:187 },
+    { n:9, title:"Being Who You Are", first:"", file:"11-chapter-09-being-who-you-are.mp3", duration:158 },
+    { n:10, title:"The Emotional Path", first:"", file:"12-chapter-10-the-emotional-path.mp3", duration:262 },
+    { n:11, title:"A Quiet Mind", first:"", file:"13-chapter-11-a-quiet-mind.mp3", duration:348 },
+    { n:12, title:"Moments to Notice", first:"", file:"14-chapter-12-moments-to-notice.mp3", duration:179 },
+    { n:13, title:"A Third of Your Life", first:"", file:"15-chapter-13-a-third-of-your-life.mp3", duration:301 },
+    { n:14, title:"Life Is on Your Side", first:"", file:"16-chapter-14-life-is-on-your-side.mp3", duration:170 },
+    { n:15, title:"You Are More Than This", first:"", file:"17-chapter-15-you-are-more-than-this.mp3", duration:197 },
+    { n:16, title:"The Power of Belief", first:"", file:"18-chapter-16-the-power-of-belief.mp3", duration:145 },
+    { n:17, title:"Your Most Important Hour", first:"", file:"19-chapter-17-your-most-important-hour.mp3", duration:296 },
+    { n:null, title:"Appendix", first:"", file:"20-appendix.mp3", duration:119 }
+  ]
 } ];
 /* helpers used by the product page and the player */
 const bookSeconds = b => b.chapters.reduce((a,c) => a + c.duration, 0);
