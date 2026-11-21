@@ -11,19 +11,21 @@
 <body>
 <div id="site-header"></div>
 
-<section class="shop" id="shop">
-  <h1>Welcome to Miss Sophia’s bookshop</h1>
-  <p>A quiet place for heartfelt stories, gentle wisdom, and a little light in a noisy world.</p>
-  <a class="hero-btn" id="heroListen" href="library.html">Listen to a free story</a>
+<section class="shop" id="shop" role="img" aria-label="A cosy bookshop"></section>
+
+<section class="welcome" id="free-to-listen">
+  <div class="welcome-text">
+    <h1>Welcome to Miss Sophia’s bookshop</h1>
+    <p>A quiet place for heartfelt stories, gentle wisdom, and a little light in a noisy world.</p>
+    <h2 class="listen-label">Listen to a free story</h2>
+  </div>
+  <div class="welcome-stories">
+    <div class="free-list" id="freeList"></div>
+    <a class="more" href="wisdom.html">All stories &amp; wisdom →</a>
+  </div>
 </section>
 
 <main class="wrap">
-
-  <section class="block" id="free-to-listen">
-    <h2 class="eyebrow">Free to listen</h2>
-    <div class="free-list" id="freeList"></div>
-    <a class="more" href="wisdom.html">All stories &amp; wisdom →</a>
-  </section>
 
   <section class="block">
     <h2 class="eyebrow">A thought for today</h2>
@@ -83,7 +85,6 @@
        <span class="txt"><b>${esc(w.title)}</b><span class="meta">About ${Math.max(1, Math.round(w.duration/60))} min · <span class="tag">Free</span></span></span>
        <span class="playbtn" aria-label="Play">${PLAY}</span>
      </a>`).join('');
-  if (freePieces.length) $('#heroListen').href = 'library.html#' + freePieces[0].slug;
 
   // Audiobooks: books with an AUDIOBOOKS entry are on sale (full card); the rest say "coming soon"
   const onSale = [], soon = [];
