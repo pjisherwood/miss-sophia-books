@@ -2,7 +2,9 @@
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const lamp = `<img src="logo.svg" alt="" width="56" height="56">`;
-(function(){ const l=document.createElement("link"); l.rel="icon"; l.href="logo.svg"; document.head.appendChild(l); })();
+(function(){ /* tab icon and home-screen icon: the lamp on the round cream circle (absolute paths so every page, including sub-folders, gets the same one) */
+  [["icon","/favicon.ico","","any"],["icon","/favicon-32.png","image/png","32x32"],["icon","/logo.svg","image/svg+xml","any"],["apple-touch-icon","/apple-touch-icon.png","","180x180"]].forEach(a=>{ const l=document.createElement("link"); l.rel=a[0]; l.href=a[1]; if(a[2]) l.type=a[2]; l.sizes=a[3]; document.head.appendChild(l); });
+})();
 const themeBg = t => t.image ? `url('${t.image}')` : t.look;
 const thumbBg = t => t.thumb ? `url('${t.thumb}')` : themeBg(t);
 const themeById = id => THEMES.find(t => t.id === id) || THEMES[0];
